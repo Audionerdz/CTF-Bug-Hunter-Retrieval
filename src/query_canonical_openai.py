@@ -105,7 +105,7 @@ def format_results(matches, query_text):
     print(f"\n{'=' * 70}")
     print(f"🔍 Query: '{query_text}'")
     print(f"{'=' * 70}")
-    print(f"✅ Results: {len(matches)} matches\n")
+    print(f"📊 Results: {len(matches)} matches\n")
 
     if not matches:
         print("No results found.")
@@ -114,19 +114,12 @@ def format_results(matches, query_text):
     for i, match in enumerate(matches, 1):
         meta = match["metadata"]
         print(f"{i}. {meta['chunk_id']}")
-        print(
-            f"   Score: {match['score']:.4f} | {meta.get('domain', 'unknown')} | {meta.get('chunk_type', 'unknown')} | {meta.get('confidence', 'unknown')}\n"
-        )
-
-        # Print content if available
-        if "content" in meta:
-            content = meta["content"]
-            # Print first 1000 chars or full content if shorter
-            if len(content) > 1000:
-                print(content[:1000] + "...\n")
-            else:
-                print(content + "\n")
-
+        print(f"   Score: {match['score']:.4f}")
+        print(f"   Machine: {meta.get('machine', 'N/A')}")
+        print(f"   Domain: {meta.get('domain', 'N/A')}")
+        print(f"   Phase: {meta.get('phase', 'N/A')}")
+        print(f"   Technique: {meta.get('technique', 'N/A')}")
+        print(f"   Confidence: {meta.get('confidence', 'N/A')}")
         print()
 
 
