@@ -114,5 +114,5 @@
   "procedure::web::web-enumeration::network-enumeration::001": "/home/kali/Desktop/RAG/default/web/web-enumeration/network-enumeration_001.md",
   "procedure::web::web-enumeration::application-research::001": "/home/kali/Desktop/RAG/default/web/web-enumeration/wingftp-research_001.md",
   "github::setup::working-directory::001": "/home/kali/Desktop/RAG/default/git/working-directory.md",
-  "technique::network::enumeration::directory-fuzzing::001": "/home/kali/Desktop/RAG/default/network/directory-fuzzing-ffuf.md"
+  "technique::network::enumeration::directory-fuzzing::001": "/home/kali/Desktop/RAG/default/network/directory-fuzzing_001.md"
 }
