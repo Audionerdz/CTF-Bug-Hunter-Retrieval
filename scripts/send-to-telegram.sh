@@ -1,0 +1,223 @@
+#!/bin/bash
+# Telegram Sender Quick Utility Script
+# Handles messages, files, directories, and RAG queries
+# Updated: 2026-02-09 - Full STT integration with RAG system
+
+set -e
+
+# CONFIGURATION
+RAG_PATH="/home/kali/Desktop/RAG"
+RAG_VENV="/root/.openskills/venv"
+
+# Colors
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# Activate RAG venv
+activate_venv() {
+    if [ ! -d "$RAG_VENV" ]; then
+        echo -e "${RED}RAG venv not found at $RAG_VENV${NC}"
+        exit 1
+    fi
+    source "$RAG_VENV/bin/activate"
+}
+
+# Send RAG query results to Telegram
+send_rag_query() {
+    local query="$1"
+    local top_k="${2:-5}"
+    local machine="${3:-}"
+    
+    echo -e "${BLUE}RAG Query: $query${NC}"
+    echo -e "${BLUE}Top-K: $top_k${NC}"
+    [ -n "$machine" ] && echo -e "${BLUE}Machine: $machine${NC}"
+    
+    activate_venv
+    (
+        cd "$RAG_PATH"
+        if [ -n "$machine" ]; then
+            "$RAG_VENV/bin/python3" "rag_to_telegram.py" "$query" "$top_k" "$machine"
+        else
+            "$RAG_VENV/bin/python3" "rag_to_telegram.py" "$query" "$top_k"
+        fi
+    )
+}
+
+# Send RAG query results as ZIP file
+send_rag_query_zip() {
+    local query="$1"
+    local top_k="${2:-5}"
+    local machine="${3:-}"
+    
+    echo -e "${BLUE}RAG Query ZIP: $query${NC}"
+    echo -e "${BLUE}Top-K: $top_k${NC}"
+    [ -n "$machine" ] && echo -e "${BLUE}Machine: $machine${NC}"
+    echo -e "${YELLOW}Creating ZIP file...${NC}"
+    
+    activate_venv
+    (
+        cd "$RAG_PATH"
+        if [ -n "$machine" ]; then
+            "$RAG_VENV/bin/python3" "rag_to_telegram.py" "$query" "$top_k" "$machine" --zip
+        else
+            "$RAG_VENV/bin/python3" "rag_to_telegram.py" "$query" "$top_k" --zip
+        fi
+    )
+}
+
+# Send text message
+send_message() {
+    local message="$1"
+    echo -e "${BLUE}Sending message...${NC}"
+    activate_venv
+    "$RAG_VENV/bin/python3" "$RAG_PATH/telegram_sender.py" "$message"
+}
+
+# Send file
+send_file() {
+    local file_path="$1"
+    local caption="${2:-}"
+    
+    if [ ! -f "$file_path" ]; then
+        echo -e "${RED}File not found: $file_path${NC}"
+        exit 1
+    fi
+    
+    echo -e "${BLUE}Sending file: $(basename "$file_path")${NC}"
+    activate_venv
+    
+    if [ -n "$caption" ]; then
+        "$RAG_VENV/bin/python3" "$RAG_PATH/telegram_sender.py" --file "$file_path" "$caption"
+    else
+        "$RAG_VENV/bin/python3" "$RAG_PATH/telegram_sender.py" --file "$file_path"
+    fi
+}
+
+# Send directory as ZIP
+send_directory() {
+    local dir_path="$1"
+    local caption="${2:-Directory archive}"
+    
+    if [ ! -d "$dir_path" ]; then
+        echo -e "${RED}Directory not found: $dir_path${NC}"
+        exit 1
+    fi
+    
+    echo -e "${BLUE}Sending directory: $(basename "$dir_path")${NC}"
+    activate_venv
+    "$RAG_VENV/bin/python3" "$RAG_PATH/send_directory.py" "$dir_path" "$caption"
+}
+
+# Show help
+show_help() {
+    echo -e "${BLUE}Telegram Sender - STT Command${NC}"
+    echo ""
+    echo -e "${GREEN}Usage:${NC}"
+    echo "  stt rag \"query\" [top_k] [machine]       Search RAG and send results"
+    echo "  stt rag-zip \"query\" [top_k] [machine]   Search RAG and send as ZIP"
+    echo "  stt message \"text\"                      Send text message"
+    echo "  stt file /path/to/file [caption]        Send file"
+    echo "  stt directory /path/to/dir [caption]    Send directory as ZIP"
+    echo "  stt /path/to/file                       Send file directly"
+    echo ""
+    echo -e "${GREEN}RAG Examples:${NC}"
+    echo "  stt rag \"LFI exploitation\"              # 5 results, all machines"
+    echo "  stt rag \"RCE techniques\" 10             # 10 results"
+    echo "  stt rag \"privesc\" 5 facts               # Only FACTS machine"
+    echo "  stt rag \"yaml injection\" 5 gavel        # Only GAVEL machine"
+    echo ""
+    echo -e "${GREEN}RAG ZIP Examples:${NC}"
+    echo "  stt rag-zip \"LFI exploitation\"          # 5 results as ZIP"
+    echo "  stt rag-zip \"RCE techniques\" 10         # 10 results as ZIP"
+    echo "  stt rag-zip \"privesc\" 5 facts           # FACTS results as ZIP"
+    echo ""
+    echo -e "${GREEN}Other Examples:${NC}"
+    echo "  stt message \"Task completed\""
+    echo "  stt file /root/exploit.py \"Exploit script\""
+    echo "  stt directory /root/loot \"Extracted files\""
+    echo ""
+    echo -e "${YELLOW}Index Statistics:${NC}"
+    echo "  Index:     rag-canonical-v1-emb3large"
+    echo "  Model:     text-embedding-3-large (3072D)"
+    echo "  FACTS:     105 chunks (92%)"
+    echo "  GAVEL:       9 chunks (8%)"
+    echo ""
+    echo -e "${YELLOW}Configuration:${NC}"
+    echo "  RAG Path:     $RAG_PATH"
+    echo "  RAG Venv:     $RAG_VENV"
+    echo "  Telegram:     /root/.openskills/env/telegram.env"
+    echo "  Pinecone:     /root/.openskills/env/pinecone.env"
+    echo "  OpenAI:       /root/.openskills/env/openai.env"
+}
+
+# Main logic
+case "$1" in
+    rag)
+        if [ $# -lt 2 ]; then
+            echo -e "${RED}Usage: stt rag \"query\" [top_k] [machine]${NC}"
+            echo ""
+            echo "Examples:"
+            echo "  stt rag \"LFI exploitation\""
+            echo "  stt rag \"RCE techniques\" 10"
+            echo "  stt rag \"privesc\" 5 gavel"
+            exit 1
+        fi
+        send_rag_query "$2" "${3:-5}" "${4:-}"
+        ;;
+    
+    rag-zip)
+        if [ $# -lt 2 ]; then
+            echo -e "${RED}Usage: stt rag-zip \"query\" [top_k] [machine]${NC}"
+            echo ""
+            echo "Examples:"
+            echo "  stt rag-zip \"LFI exploitation\""
+            echo "  stt rag-zip \"RCE techniques\" 10"
+            echo "  stt rag-zip \"privesc\" 5 facts"
+            exit 1
+        fi
+        send_rag_query_zip "$2" "${3:-5}" "${4:-}"
+        ;;
+    
+    message)
+        if [ $# -lt 2 ]; then
+            echo -e "${RED}Usage: stt message \"Your message\"${NC}"
+            exit 1
+        fi
+        send_message "$2"
+        ;;
+    
+    file)
+        if [ $# -lt 2 ]; then
+            echo -e "${RED}Usage: stt file /path/to/file [caption]${NC}"
+            exit 1
+        fi
+        send_file "$2" "${3:-}"
+        ;;
+    
+    directory)
+        if [ $# -lt 2 ]; then
+            echo -e "${RED}Usage: stt directory /path/to/dir [caption]${NC}"
+            exit 1
+        fi
+        send_directory "$2" "${3:-}"
+        ;;
+    
+    help|--help|-h)
+        show_help
+        ;;
+    
+    *)
+        # If first arg is a file, send it directly
+        if [ $# -ge 1 ] && [ -f "$1" ]; then
+            send_file "$1" "${2:-}"
+        else
+            show_help
+            exit 1
+        fi
+        ;;
+esac
+
+echo -e "${GREEN}Done!${NC}"
