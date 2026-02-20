@@ -1,6 +1,6 @@
 {
-  "cli::english::setup::configure-git::001": "/home/kali/Desktop/RAG/default/CLI_CHUNKS_ENGLISH.md",
-  "cli::spanish::setup::configure-git::001": "/home/kali/Desktop/RAG/default/CLI_CHUNKS_SPANISH.md",
+  "cli::english::setup::configure-git::001": "/home/kali/Desktop/RAG/default/cli/english/cli-setup-configure-git.md",
+  "cli::spanish::setup::configure-git::001": "/home/kali/Desktop/RAG/default/cli/spanish/cli-setup-configure-git.md",
   "github::workflow::before-changes::001": "/home/kali/Desktop/RAG/default/git/before-making-changes.md",
   "github::concepts::branches-explained::001": "/home/kali/Desktop/RAG/default/git/branches-explained-simple.md",
   "github::workflow::branches-rag-new-project::001": "/home/kali/Desktop/RAG/default/git/branches-rag-and-new-project.md",
