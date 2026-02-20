@@ -64,25 +64,25 @@ git log --oneline -3
 
 ```bash
 # Vectorizar un archivo individual
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py /home/kali/Desktop/RAG/default/mi-guia.md
+vectorize /home/kali/Desktop/RAG/default/mi-guia.md
 
 # Vectorizar un directorio completo
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py /home/kali/Desktop/RAG/default/
+vectorize /home/kali/Desktop/RAG/default/
 
 # Vectorizar el repositorio completo
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py /home/kali/Desktop/RAG/
+vectorize /home/kali/Desktop/RAG/
 ```
 
 ## Paso 6: Consultar tu Base de Conocimiento Vectorizada
 
 ```bash
 # Hacer una pregunta
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "tu pregunta aquí"
+query "tu pregunta aquí"
 
 # Ejemplos:
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "how to connect to github"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "cómo vectorizar archivos"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "git push workflow"
+query "how to connect to github"
+query "cómo vectorizar archivos"
+query "git push workflow"
 ```
 
 ## Ciclo Completo: Cambios → Commit → Push → Vectorizar
@@ -105,9 +105,9 @@ git commit -m "docs: Agregar nueva guía"
 git push origin main
 
 # 6. Vectorizar el nuevo contenido
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py /home/kali/Desktop/RAG/default/nueva-guia.md
+vectorize /home/kali/Desktop/RAG/default/nueva-guia.md
 
 # 7. Probar la búsqueda semántica
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "tema de tu guía"
+query "tema de tu guía"
 ```
 

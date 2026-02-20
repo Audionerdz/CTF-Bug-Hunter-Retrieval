@@ -13,26 +13,26 @@ source_file: query-search-git-commands.md
 
 ## Git Status
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "git status"
+query "git status"
 ```
 
 ## Git Add y Commit
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "git add commit"
+query "git add commit"
 ```
 
 ## Git Push Pull
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "git push pull origin"
+query "git push pull origin"
 ```
 
 ## Git Branches
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "git branch checkout"
+query "git branch checkout"
 ```
 
 ## Git Undo
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "git restore reset revert"
+query "git restore reset revert"
 ```
 

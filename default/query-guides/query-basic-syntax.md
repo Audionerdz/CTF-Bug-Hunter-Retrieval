@@ -11,22 +11,21 @@ source_file: query-basic-syntax.md
 
 # Query: Sintaxis Básica
 
-## El Comando Completo (Con venv activado)
+## El Comando Más Corto (Usando alias)
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "tu pregunta aquí"
+query "tu pregunta aquí"
 ```
 
-## Ejemplo Completo
+## Ejemplo
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "cómo hacer un commit"
+query "cómo hacer un commit"
+query "ffuf subdomain fuzzing"
+query "vectorizar archivos"
 ```
 
-## Alternativa (Si ya activaste el venv)
+## Comando Completo (sin alias)
 ```bash
-source /root/.openskills/venv/bin/activate
-cd /home/kali/Desktop/RAG
-python3 src/query_canonical_openai.py "cómo hacer un commit"
-deactivate
+query "tu pregunta aquí"
 ```
 
 ## Resultado
@@ -41,7 +40,7 @@ Con scores de relevancia (0.0 a 1.0)
 ```
 
 ## Importante
-- **Ruta completa al venv Python:** `/root/.openskills/venv/bin/python3` (NO usar `python3` del sistema)
-- **Ruta completa al script:** `/home/kali/Desktop/RAG/src/query_canonical_openai.py`
+- **Usa el alias `query`** si lo tienes configurado (ver ALIASES.md)
 - Las comillas son obligatorias alrededor de la pregunta
+- Funciona en español e inglés
 

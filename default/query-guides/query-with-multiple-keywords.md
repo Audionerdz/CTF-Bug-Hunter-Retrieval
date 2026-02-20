@@ -13,22 +13,22 @@ source_file: query-with-multiple-keywords.md
 
 ## Combinar Conceptos
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "git commit push origin main"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "create branch feature develop"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "undo revert reset hard soft"
+query "git commit push origin main"
+query "create branch feature develop"
+query "undo revert reset hard soft"
 ```
 
 ## Problema + Solución
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "error no puedo push github"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "me arrepiento commit reset"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "secretos api keys gitignore"
+query "error no puedo push github"
+query "me arrepiento commit reset"
+query "secretos api keys gitignore"
 ```
 
 ## Contexto Específico
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "RAG proyecto privado setup"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "nuevas ramas feature workflow RAG"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "vectorizar chunks query"
+query "RAG proyecto privado setup"
+query "nuevas ramas feature workflow RAG"
+query "vectorizar chunks query"
 ```
 

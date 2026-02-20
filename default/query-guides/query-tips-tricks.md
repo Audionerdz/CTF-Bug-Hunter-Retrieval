@@ -14,26 +14,26 @@ source_file: query-tips-tricks.md
 ## Natural Language Works
 ```bash
 # ¡Funciona natural!
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "tengo miedo de perder mi trabajo en git"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "¿cómo protejo mis secretos?"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "quiero trabajar con otros sin romper todo"
+query "tengo miedo de perder mi trabajo en git"
+query "¿cómo protejo mis secretos?"
+query "quiero trabajar con otros sin romper todo"
 ```
 
 ## Multiple Phrasings
 ```bash
 # Mismo concepto, palabras diferentes
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "revert"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "undo"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "ir atrás"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "deshacer cambio"
+query "revert"
+query "undo"
+query "ir atrás"
+query "deshacer cambio"
 # Cada uno puede retornar resultados ligeramente diferentes
 ```
 
 ## Be Specific
 ```bash
 # Mejor especificar contexto
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "cómo crear repo privado proyecto nuevo"
+query "cómo crear repo privado proyecto nuevo"
 # Que
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "crear repo"
+query "crear repo"
 ```
 

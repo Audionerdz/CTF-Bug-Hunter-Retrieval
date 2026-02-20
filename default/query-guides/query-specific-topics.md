@@ -13,29 +13,29 @@ source_file: query-specific-topics.md
 
 ## Ramas (Branches)
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "cómo funcionan las ramas"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "feature branch workflow"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "merge rama a main"
+query "cómo funcionan las ramas"
+query "feature branch workflow"
+query "merge rama a main"
 ```
 
 ## Versionado
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "versionado git tags"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "semantic versioning releases"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "v1.0.0 tag crear"
+query "versionado git tags"
+query "semantic versioning releases"
+query "v1.0.0 tag crear"
 ```
 
 ## Privacidad
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "repositorio público privado"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "gitignore secrets api keys"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "privacidad colaboradores"
+query "repositorio público privado"
+query "gitignore secrets api keys"
+query "privacidad colaboradores"
 ```
 
 ## Setup
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "crear repo nuevo desde cero"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "conectar con github"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "qué carpeta trabajar"
+query "crear repo nuevo desde cero"
+query "conectar con github"
+query "qué carpeta trabajar"
 ```
 

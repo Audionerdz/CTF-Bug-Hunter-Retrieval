@@ -13,22 +13,22 @@ source_file: query-english-questions.md
 
 ## How To Do Things
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "how to create a commit"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "how to create branch"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "how to vectorize files"
+query "how to create a commit"
+query "how to create branch"
+query "how to vectorize files"
 ```
 
 ## Problems and Errors
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "how to undo changes"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "cannot push to github"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "public vs private repository"
+query "how to undo changes"
+query "cannot push to github"
+query "public vs private repository"
 ```
 
 ## Direct Searches
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "git pull before start"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "api keys environment"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "main develop branches"
+query "git pull before start"
+query "api keys environment"
+query "main develop branches"
 ```
 

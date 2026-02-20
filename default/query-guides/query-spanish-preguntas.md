@@ -13,22 +13,22 @@ source_file: query-spanish-preguntas.md
 
 ## Cómo Hacer Cosas
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "cómo hacer un commit"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "cómo crear una rama"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "cómo vectorizar"
+query "cómo hacer un commit"
+query "cómo crear una rama"
+query "cómo vectorizar"
 ```
 
 ## Problemas y Errores
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "me arrepiento de un cambio"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "no puedo subir a github"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "privacidad repositorio"
+query "me arrepiento de un cambio"
+query "no puedo subir a github"
+query "privacidad repositorio"
 ```
 
 ## Búsquedas Directas
 ```bash
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "git pull antes"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "api keys secrets"
-/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "rama develop main"
+query "git pull antes"
+query "api keys secrets"
+query "rama develop main"
 ```
 
