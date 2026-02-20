@@ -115,7 +115,7 @@ def get_chunk_files_from_file(path):
         print(f"❌ ERROR: Archivo no encontrado: {file_path}")
         return None
 
-    if not file_path.endswith('.md'):
+    if not file_path.endswith(".md"):
         print(f"❌ ERROR: No es un archivo markdown (.md): {file_path}")
         return None
 
@@ -134,14 +134,14 @@ def get_chunk_files_from_file(path):
 def get_chunk_files(path):
     """
     Detecta si es directorio o archivo y retorna lista de chunks.
-    
+
     MODULAR:
     - Si es directorio → get_chunk_files_from_directory()
     - Si es archivo .md → get_chunk_files_from_file()
     - Si es solo nombre → busca en /home/kali/Desktop/RAG/
     """
     # Caso 1: Archivo individual (ruta con .md)
-    if path.endswith('.md'):
+    if path.endswith(".md"):
         print(f"📄 Detectado: Archivo individual")
         return get_chunk_files_from_file(path)
 
@@ -163,7 +163,7 @@ def get_chunk_files(path):
 
     # Caso 5: Intenta como archivo
     test_file = os.path.abspath(path)
-    if os.path.isfile(test_file) and test_file.endswith('.md'):
+    if os.path.isfile(test_file) and test_file.endswith(".md"):
         print(f"📄 Detectado: Archivo individual")
         return get_chunk_files_from_file(path)
 
@@ -228,18 +228,32 @@ def generate_chunk_registry(chunk_files):
 
 
 def save_chunk_registry(registry, registry_path):
-    """Guardar registry como JSON"""
+    """Guardar registry como JSON (incremental - no sobrescribe)"""
     import json
     from pathlib import Path
 
     # Crear directorio si no existe
     registry_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(registry_path, "w") as f:
-        json.dump(registry, f, indent=2)
+    # Cargar registry existente si existe
+    existing_registry = {}
+    if registry_path.exists():
+        try:
+            with open(registry_path, "r") as f:
+                existing_registry = json.load(f)
+        except Exception as e:
+            print(f"⚠️  No se pudo leer registry existente: {e}")
 
-    print(f"✅ Chunk registry guardado: {registry_path}")
-    print(f"   Total chunks mapeados: {len(registry)}")
+    # Fusionar registries (nuevos chunks sobrescriben los antiguos)
+    merged_registry = {**existing_registry, **registry}
+
+    # Guardar registry fusionado
+    with open(registry_path, "w") as f:
+        json.dump(merged_registry, f, indent=2)
+
+    print(f"✅ Chunk registry actualizado: {registry_path}")
+    print(f"   Nuevos chunks: {len(registry)}")
+    print(f"   Total chunks: {len(merged_registry)}")
 
 
 def process_chunks(machine_name, chunk_files, pinecone_key, openai_key):
@@ -364,8 +378,12 @@ def main():
     if len(sys.argv) < 2:
         print("Uso: python3 vectorize_canonical_openai.py <path>")
         print("\nModos soportados:")
-        print("  1. Directorio:      python3 vectorize_canonical_openai.py /home/kali/chunks/")
-        print("  2. Archivo:         python3 vectorize_canonical_openai.py /home/kali/mi_chunk.md")
+        print(
+            "  1. Directorio:      python3 vectorize_canonical_openai.py /home/kali/chunks/"
+        )
+        print(
+            "  2. Archivo:         python3 vectorize_canonical_openai.py /home/kali/mi_chunk.md"
+        )
         print("  3. Nombre simple:   python3 vectorize_canonical_openai.py cheatsheets")
         print("\nEjemplos:")
         print("  python3 vectorize_canonical_openai.py /root/chunks/")
