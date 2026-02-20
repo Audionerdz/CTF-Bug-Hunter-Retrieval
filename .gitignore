@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.Python
+venv/
+.venv/
+env/
+ENV/
+
+# Environment variables (CRITICAL - NEVER commit)
+.env
+.env.local
+.env.*.local
+telegram.env
+pinecone.env
+openai.env
+/root/.openskills/env/
+
+# Logs
+*.log
+telegram_bot.log
+*.pid
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MkDocs build
+site/
+docs/mkdocs-build/
+
+# Temporary files
+.temp/
+tmp/
+*.tmp
+
+# Test coverage
+.coverage
+htmlcov/
+
+# Project specific
+query_results/
+embeddings_cache/
+chunk_registry_backup.json
+
+# Pinecone/Vectorizer artifacts
+pinecone_vectors/
+embedding_logs/
+
+# Don't commit node_modules if any JS files added
+node_modules/
