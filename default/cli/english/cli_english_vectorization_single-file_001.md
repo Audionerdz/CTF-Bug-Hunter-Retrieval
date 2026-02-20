@@ -6,3 +6,20 @@ category: vectorization
 confidence: high
 reuse_level: universal
 tags: [vectorization, file, single, english]
+---
+
+## Vectorize a Single File
+
+```bash
+# From repo root
+cd /home/kali/Desktop/RAG
+
+# Vectorize ONE file
+vectorize /home/kali/Desktop/RAG/default/network/directory-fuzzing_001.md
+
+# Or with full path
+/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py /home/kali/Desktop/RAG/default/network/directory-fuzzing_001.md
+
+# Check result
+echo "Vectorization complete!"
+```
