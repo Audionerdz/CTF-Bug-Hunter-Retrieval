@@ -243,6 +243,20 @@ stt directory /root/loot "Extracted findings"          # Send dir
 
 ---
 
+## 📚 Scripts Reference Guide
+
+Need detailed information about what each script does? Check **[SCRIPTS_INDEX.md](./SCRIPTS_INDEX.md)** for:
+
+- **Python Scripts** (9 total): Vectorizers, query engines, Telegram integration
+- **Bash Scripts** (4 total): CLI wrappers, automation, bot management
+- **Function Reference**: Complete parameters and usage examples
+- **Architecture Overview**: How scripts interact in the system
+- **Troubleshooting**: Common issues and solutions
+
+Quick lookup for any script in your toolbox. Over 500 lines of reference material.
+
+---
+
 ## Troubleshooting
 
 ### "ModuleNotFoundError: No module named 'pinecone'"
