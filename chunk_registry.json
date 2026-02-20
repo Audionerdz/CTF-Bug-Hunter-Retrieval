@@ -1,3 +1,22 @@
 {
-  "cli::english-guide::setup::001": "/home/kali/Desktop/RAG/default/CLI_CHEATSHEET_ENGLISH.md"
+  "cli::english::files::copy-directory::001": "./default/chunks-english/cli_english_files_copy-directory_001.md",
+  "cli::english::files::delete-file::001": "./default/chunks-english/cli_english_files_delete-file_001.md",
+  "cli::english::git-basics::check-status::001": "./default/chunks-english/cli_english_git-basics_check-status_001.md",
+  "cli::english::git-basics::commit::001": "./default/chunks-english/cli_english_git-basics_commit_001.md",
+  "cli::english::git-basics::staging::001": "./default/chunks-english/cli_english_git-basics_staging_001.md",
+  "cli::english::github::pull::001": "./default/chunks-english/cli_english_github_pull_001.md",
+  "cli::english::github::push::001": "./default/chunks-english/cli_english_github_push_001.md",
+  "cli::english::query::how-to-query::001": "./default/chunks-english/cli_english_query_how-to-query_001.md",
+  "cli::english::recovery::revert-pushed::001": "./default/chunks-english/cli_english_recovery_revert-pushed_001.md",
+  "cli::english::recovery::undo-before-stage::001": "./default/chunks-english/cli_english_recovery_undo-before-stage_001.md",
+  "cli::english::recovery::undo-commit::001": "./default/chunks-english/cli_english_recovery_undo-commit_001.md",
+  "cli::english::recovery::undo-staged::001": "./default/chunks-english/cli_english_recovery_undo-staged_001.md",
+  "cli::english::reference::quick-commands::001": "./default/chunks-english/cli_english_reference_quick-commands_001.md",
+  "cli::english::tips::commit-messages::001": "./default/chunks-english/cli_english_tips_commit-messages_001.md",
+  "cli::english::tips::commit-often::001": "./default/chunks-english/cli_english_tips_commit-often_001.md",
+  "cli::english::troubleshooting::cannot-push::001": "./default/chunks-english/cli_english_troubleshooting_cannot-push_001.md",
+  "cli::english::troubleshooting::merge-conflict::001": "./default/chunks-english/cli_english_troubleshooting_merge-conflict_001.md",
+  "cli::english::vectorization::directory::001": "./default/chunks-english/cli_english_vectorization_directory_001.md",
+  "cli::english::vectorization::single-file::001": "./default/chunks-english/cli_english_vectorization_single-file_001.md",
+  "cli::english::workflow::full-cycle::001": "./default/chunks-english/cli_english_workflow_full-cycle_001.md"
 }
