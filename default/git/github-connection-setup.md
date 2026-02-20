@@ -64,34 +64,35 @@ git log --oneline -3
 
 ```bash
 # Vectorizar un archivo individual
-python3 src/vectorize_canonical_openai.py ./docs/mi-guia.md
+/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py /home/kali/Desktop/RAG/default/mi-guia.md
 
 # Vectorizar un directorio completo
-python3 src/vectorize_canonical_openai.py ./docs/
+/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py /home/kali/Desktop/RAG/default/
 
 # Vectorizar el repositorio completo
-python3 src/vectorize_canonical_openai.py .
+/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py /home/kali/Desktop/RAG/
 ```
 
 ## Paso 6: Consultar tu Base de Conocimiento Vectorizada
 
 ```bash
 # Hacer una pregunta
-python3 src/query_canonical_openai.py "tu pregunta aquí"
+/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "tu pregunta aquí"
 
 # Ejemplos:
-python3 src/query_canonical_openai.py "how to connect to github"
-python3 src/query_canonical_openai.py "cómo vectorizar archivos"
-python3 src/query_canonical_openai.py "git push workflow"
+/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "how to connect to github"
+/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "cómo vectorizar archivos"
+/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "git push workflow"
 ```
 
 ## Ciclo Completo: Cambios → Commit → Push → Vectorizar
 
 ```bash
 # 1. Hacer cambios en archivos
-nano docs/nueva-guia.md
+nano /home/kali/Desktop/RAG/default/nueva-guia.md
 
 # 2. Ver qué cambió
+cd /home/kali/Desktop/RAG
 git status
 
 # 3. Preparar los cambios
@@ -104,9 +105,9 @@ git commit -m "docs: Agregar nueva guía"
 git push origin main
 
 # 6. Vectorizar el nuevo contenido
-python3 src/vectorize_canonical_openai.py ./docs/nueva-guia.md
+/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py /home/kali/Desktop/RAG/default/nueva-guia.md
 
 # 7. Probar la búsqueda semántica
-python3 src/query_canonical_openai.py "tema de tu guía"
+/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py "tema de tu guía"
 ```
 
