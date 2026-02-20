@@ -6,7 +6,7 @@ Para facilitar el uso del sistema RAG, se han configurado dos aliases en `~/.bas
 
 ```bash
 alias vectorize='/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py'
-alias query='/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_agent.py'
+alias query='/root/.openskills/venv/bin/python3 /home/kali/Desktop/RAG/src/query_canonical_openai.py'
 ```
 
 ## Uso
