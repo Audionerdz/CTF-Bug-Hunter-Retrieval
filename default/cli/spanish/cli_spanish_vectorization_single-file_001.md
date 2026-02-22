@@ -23,3 +23,17 @@ vectorize /home/kali/Desktop/RAG/default/network/directory-fuzzing_001.md
 # Verificar resultado
 echo "¡Vectorización completa!"
 ```
+---
+
+## Vectorizar un Archivo Individual
+
+```bash
+# Desde la raíz del repositorio
+cd /home/kali/Desktop/RAG
+
+# Vectoriza UN archivo
+python3 src/vectorize_canonical_openai.py ./docs/mi-guia.md
+
+# Ver resultado
+echo "Vectorización completa!"
+```

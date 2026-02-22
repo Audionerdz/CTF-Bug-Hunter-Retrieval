@@ -25,3 +25,16 @@ vectorize /home/kali/Desktop/RAG/
 
 # Output will show chunks created
 ```
+---
+
+## Vectorize an Entire Directory
+
+```bash
+# Vectorize all files in docs/
+python3 src/vectorize_canonical_openai.py ./docs/
+
+# Vectorize entire repo
+python3 src/vectorize_canonical_openai.py .
+
+# Output will show chunks created
+```

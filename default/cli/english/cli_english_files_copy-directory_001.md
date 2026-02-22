@@ -6,3 +6,17 @@ category: file-operations
 confidence: high
 reuse_level: universal
 tags: [files, directory, copy, english]
+---
+
+## Copy Directories to Repository
+
+```bash
+# Copy entire directory
+cp -r /path/to/source /home/kali/Desktop/RAG/dest
+
+# Copy files from directory
+cp -r /path/to/source/* /home/kali/Desktop/RAG/dest/
+
+# Create new directory in repo
+mkdir -p /home/kali/Desktop/RAG/new-directory
+```
