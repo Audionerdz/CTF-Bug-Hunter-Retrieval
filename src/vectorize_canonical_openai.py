@@ -228,7 +228,7 @@ def generate_chunk_registry(chunk_files):
 
 
 def save_chunk_registry(registry, registry_path):
-    """Guardar registry como JSON (incremental - no sobrescribe)"""
+    """Guardar registry como JSON (simple append)"""
     import json
     from pathlib import Path
 
@@ -244,16 +244,16 @@ def save_chunk_registry(registry, registry_path):
         except Exception as e:
             print(f"⚠️  No se pudo leer registry existente: {e}")
 
-    # Fusionar registries (nuevos chunks sobrescriben los antiguos)
+    # Simple append: mezclar nuevos con existentes
     merged_registry = {**existing_registry, **registry}
 
-    # Guardar registry fusionado
+    # Guardar registry (sorted para consistencia)
     with open(registry_path, "w") as f:
-        json.dump(merged_registry, f, indent=2)
+        json.dump(dict(sorted(merged_registry.items())), f, indent=2)
 
-    print(f"✅ Chunk registry actualizado: {registry_path}")
-    print(f"   Nuevos chunks: {len(registry)}")
-    print(f"   Total chunks: {len(merged_registry)}")
+    new_count = len(registry)
+    total = len(merged_registry)
+    print(f"✅ Registry append: +{new_count} chunks → {total} total")
 
 
 def process_chunks(machine_name, chunk_files, pinecone_key, openai_key):
