@@ -2,11 +2,6 @@
 chunk_id: technique::web::lua-rce::data-exfiltration::001
 domain: web
 chunk_type: technique
-category: web-security
-confidence: high
-reuse_level: universal
-tags: [lua, rce, file-reading, io.open, data-exfiltration]
-source_file: /home/ftpuser/uploads/WINGDATA/2 RCE lua.md
 ---
 
 ### 1. Exfiltración de Datos (Lectura de Archivos)

@@ -2,11 +2,6 @@
 chunk_id: technique::web::lua-rce::bypass-sandbox::001
 domain: web
 chunk_type: technique
-category: web-security
-confidence: high
-reuse_level: universal
-tags: [lua, rce, bypass, sandbox-escape, loadstring, hex-encoding]
-source_file: /home/ftpuser/uploads/WINGDATA/2 RCE lua.md
 ---
 
 ### 2. Bypass de Sandbox con `loadstring` (Ofuscación)

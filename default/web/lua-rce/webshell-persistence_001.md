@@ -2,11 +2,6 @@
 chunk_id: technique::web::lua-rce::webshell-persistence::001
 domain: web
 chunk_type: technique
-category: web-security
-confidence: high
-reuse_level: universal
-tags: [lua, rce, persistence, webshell, io.open, file-writing]
-source_file: /home/ftpuser/uploads/WINGDATA/2 RCE lua.md
 ---
 
 ### 3. Persistencia (Creación de Web Shell)

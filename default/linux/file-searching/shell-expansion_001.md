@@ -2,11 +2,6 @@
 chunk_id: technique::linux::file-searching::shell-expansion::001
 domain: linux
 chunk_type: technique
-category: linux
-confidence: high
-reuse_level: universal
-tags: [wildcards, shell-expansion, cat, linux, command-line]
-source_file: /home/ftpuser/uploads/WINGDATA/Comandos para busquedas de Directorios o archivos sensibles.md
 ---
 
 ### 3. El truco del Shell (Expansion de comodines)

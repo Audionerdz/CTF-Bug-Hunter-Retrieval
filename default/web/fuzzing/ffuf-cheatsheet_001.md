@@ -1,10 +1,7 @@
 ---
 chunk_id: technique::web::fuzzing::ffuf-cheatsheet::001
 domain: web
-chunk_type: reference
-confidence: 5
-reuse_level: 1
-tags: [ffuf, web-security, fuzzing, enumeration, htb-academy, seclists]
+chunk_type: technique
 ---
 
 # Guía Maestra de Fuzzing Web con ffuf

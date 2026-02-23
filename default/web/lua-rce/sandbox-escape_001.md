@@ -2,11 +2,6 @@
 chunk_id: technique::web::lua-rce::sandbox-escape::001
 domain: web
 chunk_type: technique
-category: web-security
-confidence: high
-reuse_level: universal
-tags: [lua, rce, sandbox-escape, io.popen, null-byte]
-source_file: /home/ftpuser/uploads/WINGDATA/1 RCE lua.md
 ---
 
 ### RCE 

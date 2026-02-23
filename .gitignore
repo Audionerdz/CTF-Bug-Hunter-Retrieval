@@ -16,6 +16,7 @@ ENV/
 telegram.env
 pinecone.env
 openai.env
+gemini.env
 /root/.openskills/env/
 
 # Logs

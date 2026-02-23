@@ -21,6 +21,7 @@ During CTF competitions, you need instant access to:
 ## 🚀 Core Features
 
 ✅ **Semantic Search**: Understand intent, not just keywords  
+✅ **Interactive RAG Chat**: Terminal chat with LangChain + Gemini + Pinecone  
 ✅ **Instant Access**: Query via Telegram bot (phone, laptop, anywhere)  
 ✅ **Team Friendly**: Share findings with your CTF team instantly  
 ✅ **No Setup Hell**: One `setup.sh` command to get running  
@@ -33,6 +34,12 @@ During CTF competitions, you need instant access to:
 ## Quick Demo
 
 ```bash
+# Interactive RAG Chat (LangChain + Gemini)
+rag-chat
+# > qué es LFI y cómo explotarlo
+# > técnicas de SQL injection
+# > exit
+
 # Query your knowledge base
 /root/.openskills/venv/bin/python3 src/telegram_sender.py "SQL injection in blind contexts"
 
@@ -228,6 +235,9 @@ All services have generous free tiers suitable for CTF use.
 ## Common Commands
 
 ```bash
+# RAG Chat Interactivo (LangChain + Gemini + Pinecone)
+rag-chat                                              # Terminal chat con contexto RAG
+
 # Telegram CLI wrapper (stt = send-to-telegram)
 stt rag "LFI exploitation"                              # Search RAG
 stt rag "RCE techniques" 10                            # Top 10 results

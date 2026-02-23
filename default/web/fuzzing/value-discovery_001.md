@@ -2,9 +2,6 @@
 chunk_id: technique::web::fuzzing::value-discovery::001
 domain: web
 chunk_type: technique
-confidence: 5
-reuse_level: 1
-tags: [ffuf, value-fuzzing, wordlists, web-security, enumeration]
 ---
 
 # Identificación de valores válidos mediante Fuzzing con ffuf
