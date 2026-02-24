@@ -8,7 +8,7 @@ Usage:
   python3 telegram_sender.py --file /path/to/file
 
 Requires:
-  - /root/.openskills/env/telegram.env with TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID
+  - RAG/.env/telegram.env with TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID
 """
 
 import os
@@ -18,26 +18,23 @@ import shutil
 import logging
 import tempfile
 import requests
+from pathlib import Path
+
+# Import centralized configuration
+sys.path.insert(0, str(Path(__file__).parent))
+import config
 
 logger = logging.getLogger(__name__)
 
 
 def load_api_keys():
-    """Load API keys from env files"""
-    keys = {}
+    """Load API keys from centralized config"""
     try:
-        with open("/root/.openskills/env/telegram.env", "r") as f:
-            for line in f:
-                line = line.strip()
-                if line.startswith("TELEGRAM_BOT_TOKEN="):
-                    keys["telegram_token"] = line.split("=", 1)[1]
-                elif line.startswith("TELEGRAM_CHAT_ID="):
-                    keys["telegram_chat_id"] = line.split("=", 1)[1]
-    except FileNotFoundError:
-        logger.error("Telegram env file not found: /root/.openskills/env/telegram.env")
-        return keys
-
-    return keys
+        telegram_token, telegram_chat_id = config.get_telegram_keys()
+        return {"telegram_token": telegram_token, "telegram_chat_id": telegram_chat_id}
+    except ValueError as e:
+        logger.error(f"Telegram keys error: {e}")
+        return {}
 
 
 class TelegramSender:

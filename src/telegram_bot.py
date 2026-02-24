@@ -41,16 +41,20 @@ from telegram.ext import (
 from pinecone import Pinecone
 from openai import OpenAI
 
+# Import centralized configuration
+sys.path.insert(0, str(Path(__file__).parent.parent))
+import config
+
 # ============================================================================
 # CONSTANTS
 # ============================================================================
 
-INDEX_NAME = "rag-canonical-v1-emb3large"
-EMBEDDING_MODEL = "text-embedding-3-large"
-EMBEDDING_DIM = 3072
+INDEX_NAME = config.INDEX_NAME
+EMBEDDING_MODEL = config.EMBEDDING_MODEL
+EMBEDDING_DIM = config.EMBEDDING_DIM
 DEFAULT_TOP_K = 5
 MAX_TOP_K = 50
-CHUNK_REGISTRY_PATH = "/home/kali/Desktop/RAG/chunk_registry.json"
+CHUNK_REGISTRY_PATH = str(config.CHUNK_REGISTRY)
 
 MARKDOWN_SPECIAL_CHARS = [
     "_",
@@ -90,41 +94,23 @@ logger = logging.getLogger(__name__)
 
 
 def load_api_keys():
-    """Load API keys from env files"""
+    """Load API keys from centralized configuration"""
     keys = {}
 
     try:
-        with open("/root/.openskills/env/telegram.env", "r") as f:
-            for line in f:
-                line = line.strip()
-                if line.startswith("TELEGRAM_BOT_TOKEN="):
-                    keys["telegram_token"] = line.split("=", 1)[1]
-                elif line.startswith("TELEGRAM_CHAT_ID="):
-                    keys["telegram_chat_id"] = line.split("=", 1)[1]
-    except FileNotFoundError:
-        logger.error(
-            "TELEGRAM_BOT_TOKEN not found in /root/.openskills/env/telegram.env"
-        )
+        keys["telegram_token"], keys["telegram_chat_id"] = config.get_telegram_keys()
+    except ValueError as e:
+        logger.error(f"Telegram keys error: {e}")
 
     try:
-        with open("/root/.openskills/env/pinecone.env", "r") as f:
-            for line in f:
-                line = line.strip()
-                if line.startswith("PINECONE_API_KEY="):
-                    keys["pinecone_key"] = line.split("=", 1)[1]
-                    break
-    except FileNotFoundError:
-        logger.error("PINECONE_API_KEY not found")
+        keys["pinecone_key"] = config.get_pinecone_key()
+    except ValueError as e:
+        logger.error(f"Pinecone key error: {e}")
 
     try:
-        with open("/root/.openskills/env/openai.env", "r") as f:
-            for line in f:
-                line = line.strip()
-                if line.startswith("OPENAI_API_KEY="):
-                    keys["openai_key"] = line.split("=", 1)[1]
-                    break
-    except FileNotFoundError:
-        logger.error("OPENAI_API_KEY not found")
+        keys["openai_key"] = config.get_openai_key()
+    except ValueError as e:
+        logger.error(f"OpenAI key error: {e}")
 
     return keys
 

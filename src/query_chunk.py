@@ -1,71 +1,56 @@
 #!/usr/bin/env python3
 """
-Query chunks from rag-canonical-v1-emb3large by chunk_id
-Usage: python3 query_chunk.py <chunk_id>
+CLI wrapper for fetching a specific chunk by ID.
+For programmatic use: from rag import RAG; r = RAG(); r.fetch("chunk_id")
 """
 
-import os
 import sys
-from pinecone import Pinecone
+from pathlib import Path
 
-def load_api_key():
-    with open("/root/.openskills/env/pinecone.env") as f:
-        for line in f:
-            if "PINECONE_API_KEY=" in line:
-                return line.split("=")[1].strip()
-    return None
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from rag.query import QueryEngine
 
-def query_chunk(chunk_id):
-    api_key = load_api_key()
-    if not api_key:
-        print("❌ PINECONE_API_KEY not found")
-        return
-    
-    pc = Pinecone(api_key=api_key)
-    idx = pc.Index("rag-canonical-v1-emb3large")
-    
-    try:
-        results = idx.fetch(ids=[chunk_id])
-        
-        if results and results.get('vectors'):
-            chunk = results['vectors'].get(chunk_id)
-            if chunk:
-                print(f"\n✅ Chunk encontrado: {chunk_id}\n")
-                print("=" * 70)
-                
-                metadata = chunk.get('metadata', {})
-                
-                # Print metadata
-                print("METADATA:")
-                for key, value in metadata.items():
-                    if key == 'content':
-                        continue  # Process content separately
-                    print(f"  {key}: {value}")
-                
-                # Print content
-                content = metadata.get('content', '')
-                if content:
-                    print(f"\nCONTENT ({len(content)} chars):")
-                    print("-" * 70)
-                    print(content)
-                    print("-" * 70)
-                else:
-                    print("\n⚠️  NO CONTENT FOUND")
-                
-            else:
-                print(f"❌ Chunk {chunk_id} not found")
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python3 query_chunk.py <chunk_id> [OPTIONS]")
+        print("  --namespace <ns>  Namespace to fetch from")
+        print("\nExample: python3 query_chunk.py technique::linux::compression::001")
+        print("         python3 query_chunk.py chunk_id --namespace cve")
+        sys.exit(1)
+
+    chunk_id = sys.argv[1]
+    namespace = None
+
+    # Parse optional arguments
+    args = sys.argv[2:]
+    i = 0
+    while i < len(args):
+        if args[i] == "--namespace" and i + 1 < len(args):
+            namespace = args[i + 1]
+            i += 2
         else:
-            print(f"❌ No results found")
-            
-    except Exception as e:
-        print(f"❌ Error: {e}")
+            i += 1
+
+    engine = QueryEngine(namespace=namespace)
+    result = engine.fetch(chunk_id)
+
+    if result:
+        meta = result["metadata"]
+        print(f"\nChunk: {chunk_id}")
+        print("=" * 60)
+        for k, v in meta.items():
+            if k == "content":
+                continue
+            print(f"  {k}: {v}")
+        content = result.get("content", "")
+        if content:
+            print(f"\nContent ({len(content)} chars):")
+            print("-" * 60)
+            print(content)
+    else:
+        print(f"Chunk not found: {chunk_id}")
+
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python3 query_chunk.py <chunk_id>")
-        print("Example: python3 query_chunk.py technique::linux::compression::001")
-        sys.exit(1)
-    
-    chunk_id = sys.argv[1]
-    query_chunk(chunk_id)
-
+    main()

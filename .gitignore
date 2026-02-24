@@ -59,3 +59,6 @@ embedding_logs/
 
 # Don't commit node_modules if any JS files added
 node_modules/
+
+# Bot packages (already integrated into rag/)
+*.zip

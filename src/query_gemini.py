@@ -6,8 +6,8 @@ Usage:
     python3 query_gemini.py "your query here" [--top-k 5]
 
 Environment files:
-    /root/.openskills/env/gemini.env - Google API key
-    /root/.openskills/env/pinecone.env - Pinecone config
+    RAG/.env/gemini.env - Google API key
+    RAG/.env/pinecone.env - Pinecone config
 
 Model: gemini-embedding-001 (3072 dimensions) - compatible with rag-canonical-v1-emb3large
 """
@@ -21,8 +21,12 @@ from pinecone import Pinecone
 from google import genai
 from google.genai import types
 
-GEMINI_ENV_PATH = "/root/.openskills/env/gemini.env"
-PINECONE_ENV_PATH = "/root/.openskills/env/pinecone.env"
+# Import centralized configuration
+sys.path.insert(0, str(Path(__file__).parent.parent))
+import config
+
+GEMINI_ENV_PATH = str(config.ENV_DIR / "gemini.env")
+PINECONE_ENV_PATH = str(config.ENV_DIR / "pinecone.env")
 
 DEFAULT_INDEX = "rag-canonical-v1-emb3large"
 DEFAULT_NAMESPACE = ""
