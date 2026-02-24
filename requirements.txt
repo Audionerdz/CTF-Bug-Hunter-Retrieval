@@ -1,5 +1,6 @@
-# RAG System Dependencies
-# LangChain Core
+# RAG Framework v2.0 - Complete Dependencies
+
+# Core LangChain
 langchain>=0.3.0
 langchain-core>=0.3.0
 langchain-community>=0.3.0
@@ -9,12 +10,16 @@ langchain-openai>=0.2.0
 langchain-google-genai>=2.0.0
 langchain-pinecone>=0.1.0
 
-# Vector Store
-pinecone>=5.0.0
+# Vector Database
+pinecone-client>=3.0.0
 
-# Embeddings & LLM Providers
+# LLM & Embedding Providers
 openai>=1.0.0
 google-generativeai>=0.8.0
 
-# Utilities
+# Messaging & Communication
+python-telegram-bot>=20.0
+requests>=2.31.0
+
+# Configuration
 python-dotenv>=1.0.0
