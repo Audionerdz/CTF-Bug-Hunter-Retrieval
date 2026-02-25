@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
 CLI wrapper for query + send to Telegram.
-For programmatic use: from rag import RAG; r = RAG(); r.send(r.query("text"))
+For programmatic use: from atlas_engine import RAG; r = RAG(); r.send(r.query("text"))
 """
 
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from rag.query import QueryEngine
-from rag.telegram import Telegram
+from atlas_engine.query import QueryEngine
+from atlas_engine.telegram import Telegram
 
 
 def main():

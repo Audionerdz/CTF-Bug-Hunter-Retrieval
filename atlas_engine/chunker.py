@@ -16,7 +16,7 @@ Usage (via RAG framework):
     chunks = r.chunk("/path/to/file.pdf", chunk_size=500, overlap=50)
 
 Usage (standalone):
-    from rag.chunker import Chunker
+    from atlas_engine.chunker import Chunker
     c = Chunker()
     chunks = c.process("/path/to/file.pdf")
     c.save(chunks, output_dir="/path/to/output")

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 CLI wrapper for canonical queries with machine filter.
-For programmatic use: from rag import RAG; r = RAG(); r.query("text", machine="gavel")
+For programmatic use: from atlas_engine import RAG; r = RAG(); r.query("text", machine="gavel")
 """
 
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from rag.query import QueryEngine
+from atlas_engine.query import QueryEngine
 
 
 def main():

@@ -35,7 +35,7 @@ class QueryEngine:
         self._openai = None
 
         # Use provided registry or create one
-        from rag.registry import Registry
+        from atlas_engine.registry import Registry
 
         self.registry = registry or Registry()
 

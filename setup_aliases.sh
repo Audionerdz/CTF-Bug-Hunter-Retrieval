@@ -1,24 +1,24 @@
 #!/bin/bash
 
-# RAG System Aliases Setup Script
-# This script automatically adds RAG aliases to your shell configuration
+# Atlas Engine - Alias Setup Script
+# This script automatically adds Atlas Engine aliases to your shell configuration
 
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║          RAG System - Alias Setup Script                    ║"
+echo "║          Atlas Engine - Alias Setup Script                  ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo
 
 # Define aliases
 ALIASES='
-# RAG System Aliases (Updated: GeminiRag instead of rag-chat)
-alias vectorize='"'"'python3 /home/kali/Desktop/RAG/src/vectorize_canonical_openai.py'"'"'
-alias query='"'"'python3 /home/kali/Desktop/RAG/src/query_fast.py'"'"'
-alias rag-query='"'"'python3 /home/kali/Desktop/RAG/src/query_agent.py'"'"'
-alias GeminiRag='"'"'python3 /home/kali/Desktop/RAG/src/gemini_rag.py'"'"'
-alias pa='"'"'/usr/local/bin/pa'"'"'
-alias rag-send='"'"'python3 /home/kali/Desktop/RAG/telegram_sender.py'"'"'
-alias rag-bot='"'"'python3 /home/kali/Desktop/RAG/src/telegram_bot.py'"'"'
-alias rag-sync='"'"'python3 /home/kali/Desktop/RAG/src/sync_registry.py'"'"'
+# Atlas Engine CLI Aliases
+alias atlas-vectorize='"'"'python3 /home/kali/Desktop/atlas-engine/src/vectorize_canonical_openai.py'"'"'
+alias atlas-query='"'"'python3 /home/kali/Desktop/atlas-engine/src/query_fast.py'"'"'
+alias atlas-ask='"'"'python3 /home/kali/Desktop/atlas-engine/src/query_agent.py'"'"'
+alias atlas-chat='"'"'python3 /home/kali/Desktop/atlas-engine/src/gemini_rag.py'"'"'
+alias atlas-stt='"'"'python3 /home/kali/Desktop/atlas-engine/src/rag_to_telegram.py'"'"'
+alias atlas-send='"'"'python3 /home/kali/Desktop/atlas-engine/src/rag_to_telegram.py'"'"'
+alias atlas-bot='"'"'python3 /home/kali/Desktop/atlas-engine/src/telegram_bot.py'"'"'
+alias atlas-sync='"'"'python3 /home/kali/Desktop/atlas-engine/src/sync_registry.py'"'"'
 '
 
 # Detect shell
@@ -37,8 +37,8 @@ fi
 echo
 
 # Check if aliases already exist
-if grep -q "GeminiRag=" "$SHELL_CONFIG"; then
-    echo "⚠️  Aliases already installed in $SHELL_CONFIG"
+if grep -q "atlas-chat=" "$SHELL_CONFIG"; then
+    echo "⚠️  Atlas Engine aliases already installed in $SHELL_CONFIG"
     echo
     read -p "Do you want to update them? (y/n) " -n 1 -r
     echo
@@ -49,7 +49,7 @@ if grep -q "GeminiRag=" "$SHELL_CONFIG"; then
     
     # Remove old aliases first
     echo "🗑️  Removing old aliases..."
-    sed -i.bak '/# RAG System Aliases/,/alias rag-sync=/d' "$SHELL_CONFIG"
+    sed -i.bak '/# Atlas Engine CLI Aliases/,/alias atlas-sync=/d' "$SHELL_CONFIG"
     echo "✅ Old aliases removed"
 fi
 
@@ -67,21 +67,22 @@ echo "✅ Shell configuration reloaded"
 # Verify
 echo
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "✨ Aliases Installed:"
+echo "✨ Atlas Engine Aliases Installed:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo
-alias | grep -E 'vectorize|query|GeminiRag|pa=|rag-send|rag-bot|rag-sync' || echo "⚠️  Run: source $SHELL_CONFIG"
+alias | grep -E 'atlas-' || echo "⚠️  Run: source $SHELL_CONFIG"
 echo
 echo "🎯 Usage:"
-echo "   vectorize /path              - Vectorize chunks"
-echo "   query \"your query\"          - Quick query"
-echo "   rag-query \"query\"           - Query with Telegram"
-echo "   GeminiRag                    - Interactive chat with Gemini"
-echo "   pa \"query\"                  - Pinecone Assistant CLI"
-echo "   rag-send \"message\"          - Send to Telegram"
-echo "   rag-bot                      - Start Telegram bot"
-echo "   rag-sync                     - Sync chunk registry"
+echo "   atlas-vectorize /path              - Vectorize chunks with metadata"
+echo "   atlas-query \"your query\"          - Semantic search"
+echo "   atlas-ask \"question\"              - Ask with AI reasoning + sources"
+echo "   atlas-chat                         - Interactive chat with Gemini/GPT/Ollama"
+echo "   atlas-stt query \"text\"            - Search & send to Telegram"
+echo "   atlas-stt file /path               - Send file to Telegram"
+echo "   atlas-stt dir /path                - Zip & send directory"
+echo "   atlas-send \"message\"              - Send to Telegram"
+echo "   atlas-bot                          - Start Telegram bot"
+echo "   atlas-sync                         - Rebuild chunk registry"
 echo
-echo "✅ Setup complete!"
+echo "✅ Setup complete! Atlas Engine is ready to hunt."
 echo
-

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 CLI wrapper for interactive Gemini RAG chat.
-For programmatic use: from rag import RAG; r = RAG(); r.chat()
+For programmatic use: from atlas_engine import RAG; r = RAG(); r.chat()
 """
 
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from rag.chat import Chat
+from atlas_engine.chat import Chat
 
 
 def main():

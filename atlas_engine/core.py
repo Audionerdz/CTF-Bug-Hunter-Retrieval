@@ -2,9 +2,9 @@
 RAG - Main orchestrator class that unifies all framework components.
 
 Usage:
-    from rag import RAG
+    from atlas_engine import Atlas
 
-    r = RAG()
+    atlas = Atlas()
 
     # Query
     results = r.query("LFI exploitation")
@@ -54,12 +54,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 import config
 
-from rag.registry import Registry
-from rag.vectorizer import Vectorizer
-from rag.chunker import Chunker
-from rag.query import QueryEngine
-from rag.telegram import Telegram
-from rag.chat import Chat
+from atlas_engine.registry import Registry
+from atlas_engine.vectorizer import Vectorizer
+from atlas_engine.chunker import Chunker
+from atlas_engine.query import QueryEngine
+from atlas_engine.telegram import Telegram
+from atlas_engine.chat import Chat
 
 
 class RAG:
@@ -425,7 +425,7 @@ RAG Framework v2.0 - Quick Reference
 ======================================
 
 INITIALIZATION (with namespace support):
-  r = RAG()                                # default index & namespace
+  atlas = Atlas()                                # default index & namespace
   r = RAG(index="my-index")               # custom index
   r = RAG(namespace="cve")                # custom namespace preset
   r = RAG(index="my-index", namespace="ctf")  # both custom

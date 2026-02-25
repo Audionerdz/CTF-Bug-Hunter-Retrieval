@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 CLI wrapper for fetching a specific chunk by ID.
-For programmatic use: from rag import RAG; r = RAG(); r.fetch("chunk_id")
+For programmatic use: from atlas_engine import RAG; r = RAG(); r.fetch("chunk_id")
 """
 
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from rag.query import QueryEngine
+from atlas_engine.query import QueryEngine
 
 
 def main():

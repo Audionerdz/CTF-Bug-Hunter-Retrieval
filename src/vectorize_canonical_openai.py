@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 CLI wrapper for the Vectorizer.
-For programmatic use: from rag import RAG; r = RAG(); r.vectorize(path)
+For programmatic use: from atlas_engine import RAG; r = RAG(); r.vectorize(path)
 """
 
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from rag.vectorizer import Vectorizer
+from atlas_engine.vectorizer import Vectorizer
 
 
 def main():

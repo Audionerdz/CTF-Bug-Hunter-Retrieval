@@ -509,7 +509,7 @@ class Vectorizer:
         Returns:
             Registry instance.
         """
-        from rag.registry import Registry
+        from atlas_engine.registry import Registry
 
         reg = registry or Registry()
         mapping = reg.build_from_files(file_paths)
