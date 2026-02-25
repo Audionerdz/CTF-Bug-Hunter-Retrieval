@@ -434,71 +434,71 @@ RAG Framework v2.0 - Quick Reference
 
 INITIALIZATION (with namespace support):
   atlas = Atlas()                                # default index & namespace
-  r = RAG(index="my-index")               # custom index
-  r = RAG(namespace="cve")                # custom namespace preset
-  r = RAG(index="my-index", namespace="ctf")  # both custom
+  atlas = Atlas(index="my-index")               # custom index
+  atlas = Atlas(namespace="cve")                # custom namespace preset
+  atlas = Atlas(index="my-index", namespace="ctf")  # both custom
 
   Namespace presets: "root" (default), "cve", "technique", "ctf", "tools", "payloads"
 
 QUERY (with namespace override):
-  r.query("LFI exploitation")             # search (top 5)
-  r.query("RCE", top_k=10)                # more results
-  r.query("privesc", machine="gavel")     # filter by machine
-  r.query("text", namespace="cve")        # search in specific namespace
-  r.fetch("chunk_id::here")               # fetch specific chunk
-  r.fetch("chunk_id", namespace="ctf")    # fetch from specific namespace
+  atlas.query("LFI exploitation")             # search (top 5)
+  atlas.query("RCE", top_k=10)                # more results
+  atlas.query("privesc", machine="gavel")     # filter by machine
+  atlas.query("text", namespace="cve")        # search in specific namespace
+  atlas.fetch("chunk_id::here")               # fetch specific chunk
+  atlas.fetch("chunk_id", namespace="ctf")    # fetch from specific namespace
 
 CHUNK (PDF/text -> markdown):
-  r.chunk("/path/to/file.pdf")             # chunk a PDF
-  r.chunk("/path/to/pdfs/")               # chunk all PDFs in dir
-  r.chunk("file.pdf", domain="cve")       # with domain tag
-  r.chunk("file.pdf", chunk_size=1500)    # custom size
+  atlas.chunk("/path/to/file.pdf")             # chunk a PDF
+  atlas.chunk("/path/to/pdfs/")               # chunk all PDFs in dir
+  atlas.chunk("file.pdf", domain="cve")       # with domain tag
+  atlas.chunk("file.pdf", chunk_size=1500)    # custom size
 
   # Granular:
-  files = r.chunker.discover("/path")
-  docs = r.chunker.load(files)
-  chunks = r.chunker.split(docs)
-  r.chunker.save(chunks)
+  files = atlas.chunker.discover("/path")
+  docs = atlas.chunker.load(files)
+  chunks = atlas.chunker.split(docs)
+  atlas.chunker.save(chunks)
 
 VECTORIZE (.md chunks -> Pinecone):
-  r.vectorize("/path/to/chunks")           # full pipeline (default namespace)
-  r.vectorize("my_chunk.md")              # single file
-  r.vectorize("/path", namespace="cve")   # vectorize into specific namespace
+  atlas.vectorize("/path/to/chunks")           # full pipeline (default namespace)
+  atlas.vectorize("my_chunk.md")              # single file
+  atlas.vectorize("/path", namespace="cve")   # vectorize into specific namespace
 
   Supports:
     - Markdown WITH frontmatter (---YAML---): Use metadata from YAML
     - Markdown WITHOUT frontmatter: Auto-generate metadata, edit in Pinecone
 
   # Granular:
-  files = r.vectorizer.discover("/path")
-  parsed = r.vectorizer.parse(files)                    # handles both cases
-  validated = r.vectorizer.validate(parsed)             # auto-generates chunk_id if missing
-  embedded = r.vectorizer.embed(validated)
-  r.vectorizer.upsert(embedded)
-  r.vectorizer.register(files)
+  files = atlas.vectorizer.discover("/path")
+  parsed = atlas.vectorizer.parse(files)                    # handles both cases
+  validated = atlas.vectorizer.validate(parsed)             # auto-generates chunk_id if missing
+  embedded = atlas.vectorizer.embed(validated)
+  atlas.vectorizer.upsert(embedded)
+  atlas.vectorizer.register(files)
 
 INGEST (chunk + vectorize in one shot):
-  r.ingest("/path/to/file.pdf")            # PDF -> chunks -> Pinecone
-  r.ingest("/path/to/pdfs/", domain="cve") # batch + domain
-  r.ingest("/path", namespace="ctf")      # ingest into specific namespace
+  atlas.ingest("/path/to/file.pdf")            # PDF -> chunks -> Pinecone
+  atlas.ingest("/path/to/pdfs/", domain="cve") # batch + domain
+  atlas.ingest("/path", namespace="ctf")      # ingest into specific namespace
 
 CHAT (3 backends):
-  r.chat()                                 # Gemini (default)
-  r.chat("gpt")                           # GPT-4o-mini
-  r.chat("ollama")                         # Ollama local
-  response, sources = r.ask("question")
-  response, sources = r.ask("q", backend="gpt")
-  response, sources = r.ask("q", namespace="cve")  # ask within specific namespace
+  atlas.chat()                                 # Gemini (default)
+  atlas.chat("gpt")                           # GPT-4o-mini
+  atlas.chat("ollama")                         # Ollama local
+  response, sources = atlas.ask("question")
+  response, sources = atlas.ask("q", backend="gpt")
+  response, sources = atlas.ask("q", namespace="cve")  # ask within specific namespace
 
 TELEGRAM:
-  r.send("hello")                          # send message
-  r.send("/path/to/file.md")             # send file
-  r.send(results)                          # send query results
+  atlas.send("hello")                          # send message
+  atlas.send("/path/to/file.md")             # send file
+  atlas.send(results)                          # send query results
 
 UTILITIES:
-  r.sync()                                 # sync registry
-  r.stats()                                # index statistics
-  r.chunks()                               # list chunks
-  r.save(results, "query")               # save as markdown
-  r.help()                                 # this reference
+  atlas.sync()                             # sync registry
+  atlas.stats()                            # index statistics
+  atlas.chunks()                           # list chunks
+  atlas.save(results, "query")            # save as markdown
+  atlas.help()                             # this reference
 """)
