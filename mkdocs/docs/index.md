@@ -8,7 +8,7 @@ A modular Python framework for building **Retrieval-Augmented Generation** syste
 from atlas_engine import Atlas
 
 atlas = Atlas()
-atlas.query("LFI exploitation")
+atlas.query("LFI exploitation top_k=2")
 r.chunk("/path/to/file.pdf")
 atlas.vectorize("/path/to/chunks")
 atlas.chat()
