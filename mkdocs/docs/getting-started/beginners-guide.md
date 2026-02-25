@@ -50,7 +50,7 @@ Now that `r` is ready, try these one at a time:
 atlas.query("LFI exploitation, top_k=2")
 ```
 
-'''python
+```python
 atlas.query("Ffuf cheatsheet") # Default 5
 ```
 
