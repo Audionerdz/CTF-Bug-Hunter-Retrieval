@@ -8,17 +8,20 @@ echo "║          Atlas Engine - Alias Setup Script                  ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Define aliases
 ALIASES='
 # Atlas Engine CLI Aliases
-alias atlas-vectorize='"'"'python3 /home/kali/Desktop/atlas-engine/src/vectorize_canonical_openai.py'"'"'
-alias atlas-query='"'"'python3 /home/kali/Desktop/atlas-engine/src/query_fast.py'"'"'
-alias atlas-ask='"'"'python3 /home/kali/Desktop/atlas-engine/src/query_agent.py'"'"'
-alias atlas-chat='"'"'python3 /home/kali/Desktop/atlas-engine/src/gemini_rag.py'"'"'
-alias atlas-stt='"'"'python3 /home/kali/Desktop/atlas-engine/src/rag_to_telegram.py'"'"'
-alias atlas-send='"'"'python3 /home/kali/Desktop/atlas-engine/src/rag_to_telegram.py'"'"'
-alias atlas-bot='"'"'python3 /home/kali/Desktop/atlas-engine/src/telegram_bot.py'"'"'
-alias atlas-sync='"'"'python3 /home/kali/Desktop/atlas-engine/src/sync_registry.py'"'"'
+alias atlas-vectorize='"'"'python3 '"$SCRIPT_DIR"'/src/vectorize_canonical_openai.py'"'"'
+alias atlas-query='"'"'python3 '"$SCRIPT_DIR"'/src/query_fast.py'"'"'
+alias atlas-ask='"'"'python3 '"$SCRIPT_DIR"'/src/query_agent.py'"'"'
+alias atlas-chat='"'"'python3 '"$SCRIPT_DIR"'/src/gemini_rag.py'"'"'
+alias atlas-stt='"'"'python3 '"$SCRIPT_DIR"'/src/rag_to_telegram.py'"'"'
+alias atlas-send='"'"'python3 '"$SCRIPT_DIR"'/src/rag_to_telegram.py'"'"'
+alias atlas-bot='"'"'python3 '"$SCRIPT_DIR"'/src/telegram_bot.py'"'"'
+alias atlas-sync='"'"'python3 '"$SCRIPT_DIR"'/src/sync_registry.py'"'"'
 '
 
 # Detect shell
