@@ -11,17 +11,30 @@ echo
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Define aliases
+# Check if venv exists
+if [ ! -d "$SCRIPT_DIR/venv" ]; then
+    echo "⚠️  Virtual environment not found"
+    echo "   Creating venv and installing dependencies..."
+    python3 -m venv "$SCRIPT_DIR/venv"
+    "$SCRIPT_DIR/venv/bin/pip" install -q -r "$SCRIPT_DIR/requirements.txt"
+    echo "✅ venv created and dependencies installed"
+    echo ""
+fi
+
+# Use venv Python
+PYTHON="$SCRIPT_DIR/venv/bin/python3"
+
+# Define aliases using venv Python
 ALIASES='
-# Atlas Engine CLI Aliases
-alias atlas-vectorize='"'"'python3 '"$SCRIPT_DIR"'/src/vectorize_canonical_openai.py'"'"'
-alias atlas-query='"'"'python3 '"$SCRIPT_DIR"'/src/query_fast.py'"'"'
-alias atlas-ask='"'"'python3 '"$SCRIPT_DIR"'/src/query_agent.py'"'"'
-alias atlas-chat='"'"'python3 '"$SCRIPT_DIR"'/src/gemini_rag.py'"'"'
-alias atlas-stt='"'"'python3 '"$SCRIPT_DIR"'/src/rag_to_telegram.py'"'"'
-alias atlas-send='"'"'python3 '"$SCRIPT_DIR"'/src/rag_to_telegram.py'"'"'
-alias atlas-bot='"'"'python3 '"$SCRIPT_DIR"'/src/telegram_bot.py'"'"'
-alias atlas-sync='"'"'python3 '"$SCRIPT_DIR"'/src/sync_registry.py'"'"'
+# Atlas Engine CLI Aliases (using venv Python)
+alias atlas-vectorize='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/vectorize_canonical_openai.py'"'"'
+alias atlas-query='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/query_fast.py'"'"'
+alias atlas-ask='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/query_agent.py'"'"'
+alias atlas-chat='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/gemini_rag.py'"'"'
+alias atlas-stt='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/rag_to_telegram.py'"'"'
+alias atlas-send='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/rag_to_telegram.py'"'"'
+alias atlas-bot='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/telegram_bot.py'"'"'
+alias atlas-sync='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/sync_registry.py'"'"'
 '
 
 # Detect shell
