@@ -50,6 +50,10 @@ Now that `r` is ready, try these one at a time:
 atlas.query("LFI exploitation, top_k=2")
 ```
 
+'''python
+atlas.query("Ffuf cheatsheet") # Default 5
+```
+
 This searches your Pinecone index and shows results right in the terminal. No script needed.
 
 ### Search with filters
