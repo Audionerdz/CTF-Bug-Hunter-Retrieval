@@ -38,7 +38,20 @@ Atlas Engine v2.0
   Root: /home/kali/Desktop/RAG
 ```
 
-That `r` object is your **entire framework**. Think of it as a remote control with all the buttons.
+That `atlas` object is your **entire framework**. Think of it as a remote control with all the buttons.
+
+### Copying Multi-line Python Code
+
+When you see code blocks in this guide, you can copy and paste them directly into Python. Just paste the entire block including `python` at the start and end:
+
+```python
+python3
+>>> from atlas_engine import Atlas
+>>> atlas = Atlas()
+>>> atlas.query("LFI exploitation")
+```
+
+After pasting, Python will ignore the `python3` part and execute only the lines starting with `>>>`. The output will appear automatically.
 
 ## Your First Commands
 
