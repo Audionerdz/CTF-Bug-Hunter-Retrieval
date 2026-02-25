@@ -105,13 +105,13 @@ atlas.query("privilege escalation", top_k=10, machine="facts")
 ### Get a specific chunk
 
 ```python
-r.fetch("technique::web::lfi::path-traversal::001")
+atlas.fetch("technique::web::lfi::path-traversal::001")
 ```
 
 ### See index statistics
 
 ```python
-r.stats()
+atlas.stats()
 ```
 
 ### Ask a question (AI-powered answer)
@@ -163,7 +163,7 @@ The framework searches your knowledge base, retrieves relevant chunks, and uses 
 ### See all available commands
 
 ```python
-r.help()
+atlas.help()
 ```
 
 ## How It Feels
@@ -180,7 +180,7 @@ Framework: [shows 10 results from the CVE namespace]
 You:       atlas.ask("What is SUID?")
 Framework: [returns AI-generated answer with cited sources]
 
-You:       r.chunk("/home/kali/reports/scan.pdf")
+You:       atlas.chunk("/home/kali/reports/scan.pdf")
 Framework: [splits the PDF into chunks, saves them]
 
 You:       atlas.vectorize("/home/kali/Desktop/RAG/chunks")
@@ -196,11 +196,11 @@ When you type `atlas = Atlas()`, you create an object that contains:
 | What | How to Access | Description |
 |------|---------------|-------------|
 | Query Engine | `atlas.query()` | Search Pinecone |
-| Chunker | `r.chunk()` | Split PDFs/text into pieces |
+| Chunker | `atlas.chunk()` | Split PDFs/text into pieces |
 | Vectorizer | `atlas.vectorize()` | Embed and upload to Pinecone |
 | Chat | `atlas.chat()` / `atlas.ask()` | Talk to an LLM with your data |
 | Telegram | `atlas.send()` | Send results to Telegram |
-| Registry | `r.chunks()` | See all tracked chunks |
+| Registry | `atlas.chunks()` | See all tracked chunks |
 
 All of these are connected. The query engine knows about your registry. The vectorizer registers new chunks automatically. Everything stays in sync.
 
@@ -210,7 +210,7 @@ You can target specific namespaces (think of them as folders in your vector data
 
 ```python
 # At creation time (affects everything)
-r = RAG(namespace="cve")
+atlas = Atlas(namespace="cve")
 
 # Per command (one-off override)
 atlas.query("buffer overflow", namespace="ctf")
