@@ -103,10 +103,21 @@ r.stats()
 
 ### Ask a question (AI-powered answer)
 
+Get an answer from your knowledge base using Gemini (default):
+
 ```python
-response, sources = atlas.ask("How does SQL injection work?")
-print(response)
+answer, sources = atlas.ask("How does SQL injection work?")
+print(answer)
 ```
+
+Or use ChatGPT instead:
+
+```python
+answer, sources = atlas.ask("How does SQL injection work?", backend="gpt")
+print(answer)
+```
+
+The framework searches your knowledge base, retrieves relevant chunks, and uses an LLM to generate an answer with cited sources.
 
 ### See all available commands
 
