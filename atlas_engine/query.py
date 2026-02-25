@@ -208,8 +208,15 @@ class QueryEngine:
     # Formatting
     # ------------------------------------------------------------------
 
-    def format_terminal(self, results, query=None):
-        """Print results to terminal."""
+    def format_terminal(self, results, query=None, max_chars=None):
+        """
+        Print results to terminal.
+
+        Args:
+            results: List of result dicts from search()
+            query: Query text (optional)
+            max_chars: Max characters to show per chunk (None = show all)
+        """
         header = f"\n{'=' * 60}\n"
         if query:
             header += f"Query: '{query}'\n"
@@ -222,10 +229,15 @@ class QueryEngine:
                 f"   Score: {r['score']:.4f} | {r['machine']} | {r['domain']} | {r['phase']}"
             )
             if r["content"]:
-                # Show first 500 chars
-                preview = r["content"][:500]
-                if len(r["content"]) > 500:
-                    preview += "\n   ..."
+                content = r["content"]
+                if max_chars is None:
+                    # Show full content by default
+                    preview = content
+                else:
+                    # Truncate to max_chars if specified
+                    preview = content[:max_chars]
+                    if len(content) > max_chars:
+                        preview += "\n   ..."
                 print(f"\n{preview}\n")
             print()
 
