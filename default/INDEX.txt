@@ -1,0 +1,236 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                   RAG CHUNKING - WINGDATA ANALYSIS                         ║
+║                         COMPLETE INDEX                                     ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+UBICACIÓN: /home/ftpuser/uploads/RAG/
+CHUNKS TOTALES: 53
+NAMESPACE: default
+FECHA: 2026-02-18
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 ESTRUCTURA DE DIRECTORIOS
+
+RAG/
+├── manifest.json (índice maestro - 53 chunks)
+├── INDEX.txt (este archivo)
+│
+├── web/ (31 chunks de web-security)
+│   ├── lua-rce/ (10 chunks)
+│   │   ├── sandbox-escape_001.md (null-byte & ]] escape)
+│   │   ├── sandbox-escape_002.md (reconocimiento con 'id')
+│   │   ├── data-exfiltration_001.md (io.open lectura de archivos)
+│   │   ├── bypass-sandbox_001.md (loadstring & hex-encoding)
+│   │   ├── webshell-persistence_001.md (crear /var/www/html/shell.php)
+│   │   ├── denial-service_001.md (bucle infinito DoS)
+│   │   ├── io-popen-explained_001.md (desglose de io.popen)
+│   │   ├── rce-risks_001.md (riesgos post-explotación)
+│   │   └── mitigation_001.md (protección eliminando funciones)
+│   │
+│   ├── cve-2025-47812/ (4 chunks)
+│   │   ├── null-byte-injection-intro_001.md (CVSS 10.0, concepto)
+│   │   ├── null-byte-exploitation-flow_001.md (payload delivery)
+│   │   ├── null-byte-rce_001.md (ejecución como root)
+│   │   └── null-byte-impact_001.md (resumen & impacto)
+│   │
+│   ├── path-traversal/ (9 chunks)
+│   │   ├── cve-2025-4517-gps-trick_001.md (analogía conceptual)
+│   │   ├── cve-2025-4517-example_001.md (ejemplo de ataque)
+│   │   ├── cve-2025-4517-affected_001.md (Python 3.12+)
+│   │   ├── cve-2025-4517-exploit-script_001.md (código malicioso)
+│   │   ├── cve-2025-4517-remediation_001.md (protección)
+│   │   ├── path-max-overflow-concept_001.md (bypass del data_filter)
+│   │   ├── path-max-overflow-phase1_001.md (laberinto infinito)
+│   │   ├── path-max-escape-tunnel_001.md (túnel de escape)
+│   │   ├── path-max-root-access_001.md (acceso a /root)
+│   │   ├── path-max-ssh-persistence_001.md (authorized_keys)
+│   │   └── path-max-in-exploits_001.md (4096 bytes límite)
+│   │
+│   ├── url-encoding/ (4 chunks)
+│   │   ├── url-encoding-vs-base64_001.md (definición URL Encoding)
+│   │   ├── encoding-comparison_001.md (tabla comparativa)
+│   │   ├── http-request-encoding_001.md (POST HTTP ejemplo)
+│   │   └── double-encoding-trick_001.md (Base64 + URL Encoding)
+│   │
+│   ├── lua-detection/ (3 chunks)
+│   │   ├── fingerprinting-lua_001.md (Server: OpenResty, errores)
+│   │   ├── vulnerability-testing_001.md (]] inyección, time delay)
+│   │   └── known-vulnerable-services_001.md (Wing FTP, Roblox, etc)
+│   │
+│   ├── web-enumeration/ (4 chunks)
+│   │   ├── network-enumeration_001.md (nmap -sV)
+│   │   ├── http-vhost-discovery_001.md (Host fuzzing)
+│   │   ├── hosts-configuration_001.md (/etc/hosts setup)
+│   │   └── application-research_001.md (Wing FTP CVE search)
+│   │
+│   └── manual-exploitation/ (4 chunks)
+│       ├── manual-exploitation-intro_001.md (Burp Suite intro)
+│       ├── burp-login-injection_001.md (inyección en login)
+│       ├── code-triggering_001.md (activar código con Cookie)
+│       └── manual-exploitation-benefits_001.md (WAF detection)
+│
+├── linux/ (7 chunks)
+│   ├── file-searching/ (5 chunks)
+│   │   ├── find-universal_001.md (comando maestro)
+│   │   ├── find-by-type_001.md (-type d, -type f, -iname)
+│   │   ├── wildcard-basics_001.md (concepto de asteriscos)
+│   │   ├── wildcard-patterns_001.md (palabra*, *.ext, *palabra*)
+│   │   └── shell-expansion_001.md (cat *.session)
+│   │
+│   └── buffer-overflow/ (2 chunks)
+│       ├── path-max-definition_001.md (4096 bytes límite)
+│       └── path-max-in-exploits_001.md (cómo afecta exploits)
+│
+├── python-programming/ (5 chunks)
+│   └── code-analysis/ (5 chunks)
+│       ├── restore-imports-setup_001.md (imports y BACKUP_BASE_DIR)
+│       ├── restore-argparse_001.md (argumentos -b y -r)
+│       ├── restore-tag-validation_001.md (validación de tag)
+│       ├── restore-extraction_001.md (tarfile.extractall)
+│       └── tarfile-vulnerable-code_001.md (filter="data")
+│
+└── general-knowledge/ (3 chunks)
+    └── context/ (3 chunks)
+        ├── synccore-media-context_001.md (compañía SaaS VTubers)
+        ├── wacky-workflow_001.md (flujo de restauración)
+        └── script-as-master-key_001.md (escalación de privilegios)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 BÚSQUEDA RÁPIDA POR TEMA
+
+CVE-2025-47812 (NULL Byte Injection):
+  → web/cve-2025-47812/null-byte-*.md (4 chunks)
+  → web/lua-rce/sandbox-escape_*.md (3 chunks)
+  → web/manual-exploitation/* (4 chunks)
+
+CVE-2025-4517 (PATH_MAX Overflow):
+  → web/path-traversal/cve-2025-4517-*.md (5 chunks)
+  → web/path-traversal/path-max-*.md (6 chunks)
+  → linux/buffer-overflow/path-max-definition_001.md (1 chunk)
+
+Lua RCE General:
+  → web/lua-rce/*.md (10 chunks)
+  → web/lua-detection/*.md (3 chunks)
+  → web/manual-exploitation/*.md (4 chunks)
+
+Enumeración & Reconocimiento:
+  → web/web-enumeration/*.md (4 chunks)
+  → linux/file-searching/*.md (5 chunks)
+  → web/lua-detection/fingerprinting-lua_001.md (1 chunk)
+
+Encoding & Payload Delivery:
+  → web/url-encoding/*.md (4 chunks)
+  → web/manual-exploitation/manual-exploitation-intro_001.md (1 chunk)
+
+Contexto de Ataque:
+  → general-knowledge/context/*.md (3 chunks)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 ESTADÍSTICAS
+
+Total Chunks: 53
+├─ Concepts (conceptos): 6 chunks
+├─ Techniques (técnicas): 18 chunks
+├─ Exploits (exploits): 6 chunks
+├─ Procedures (procedimientos): 12 chunks
+├─ References (referencias): 9 chunks
+└─ Guidelines (guías): 2 chunks
+
+Categorías:
+├─ web-security: 31 chunks (58%)
+├─ linux: 7 chunks (13%)
+├─ python-programming: 5 chunks (9%)
+└─ general-knowledge: 3 chunks (5%)
+
+Confidence: Todos "high"
+Reuse Level: Todos "universal"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 FORMATO DE CADA CHUNK
+
+Cada archivo .md contiene:
+
+1. YAML Metadata:
+   ---
+   chunk_id: origin::domain::subdomain::intent::nnn
+   domain: web|linux|python-programming|general-knowledge
+   chunk_type: concept|technique|exploit|procedure|reference|guideline
+   category: web-security|linux|python-programming|general-knowledge
+   confidence: high
+   reuse_level: universal
+   tags: [tag1, tag2, tag3, ...]
+   source_file: /home/ftpuser/uploads/WINGDATA/original.md
+   ---
+
+2. Contenido (copiar-pega literal):
+   - Máximo 200 palabras
+   - Sin paráfrasis
+   - Código incluido como está
+   - Ejemplos literales
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 CASOS DE USO RAG
+
+1. "¿Cómo se explota CVE-2025-47812?"
+   Respuesta: null-byte-injection-intro + exploitation-flow + rce (3 chunks)
+
+2. "¿Cuáles son los pasos para reconocer Lua?"
+   Respuesta: fingerprinting-lua + vulnerability-testing (2 chunks)
+
+3. "¿Cómo funciona el exploit de PATH_MAX?"
+   Respuesta: path-max-overflow-concept + fase1-6 (7 chunks)
+
+4. "¿Diferencia entre URL Encoding y Base64?"
+   Respuesta: url-encoding-vs-base64 + encoding-comparison (2 chunks)
+
+5. "¿Cómo usar find para buscar archivos?"
+   Respuesta: find-universal + wildcard-patterns + shell-expansion (3 chunks)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 PRÓXIMOS PASOS
+
+1. Ingestar en Vector Database:
+   → Usar skill 'vectorizer-canonical'
+   → Embeddings: OpenAI text-embedding-3-large (3072D)
+   → Índice: openskills-rag
+
+2. Consultar chunks:
+   → Usar skill 'query-agent'
+   → Soporta filtros por category, domain, tags, confidence
+   → Retorna chunks con metadata
+
+3. Mantener actualizado:
+   → manifest.json es la fuente de verdad
+   → 53 entries todas indexadas
+   → Permisos: ftpuser:ftpuser (755 dirs, 644 files)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📄 ARCHIVOS PRINCIPALES
+
+manifest.json (15KB)
+  ├─ Índice maestro con 53 chunks
+  ├─ Metadata completa de cada chunk
+  ├─ Distribución por categoría y domain
+  └─ Hash/índice para validación
+
+RAG_CHUNKING_SUMMARY.md (7.5KB)
+  ├─ Resumen ejecutivo
+  ├─ Vulnerabilidades documentadas
+  ├─ Casos de uso RAG
+  └─ Próximos pasos
+
+INDEX.txt (este archivo)
+  ├─ Índice de navegación
+  ├─ Búsqueda rápida por tema
+  └─ Formato y estadísticas
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ Chunking completado: 2026-02-18
