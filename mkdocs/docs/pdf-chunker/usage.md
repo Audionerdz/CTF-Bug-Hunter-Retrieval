@@ -17,8 +17,8 @@ The PDF Chunker splits PDFs (and other documents) into RAG-ready markdown chunks
 ### From Python (Recommended)
 
 ```python
-from rag import RAG
-r = RAG()
+from atlas_engine import Atlas
+atlas = Atlas()
 
 # Chunk a single PDF
 r.chunk("/home/kali/reports/nmap_scan.pdf")
@@ -27,7 +27,7 @@ r.chunk("/home/kali/reports/nmap_scan.pdf")
 r.chunk("/home/kali/reports/")
 
 # Chunk and vectorize in one shot
-r.ingest("/home/kali/reports/nmap_scan.pdf")
+atlas.ingest("/home/kali/reports/nmap_scan.pdf")
 ```
 
 ### From the Terminal
@@ -49,7 +49,7 @@ vectorize /home/kali/Desktop/RAG/chunks
 | `chunk_size` | int | 2800 | Max characters per chunk (~700 tokens) |
 | `chunk_overlap` | int | 320 | Overlap between chunks (~80 tokens) |
 
-### r.ingest() Parameters
+### atlas.ingest() Parameters
 
 Same as `r.chunk()` plus:
 
@@ -120,13 +120,13 @@ r.chunk("/path/to/file.pdf", output_dir="/home/kali/my_chunks")
 
 ```python
 # One command: chunk + vectorize
-r.ingest("/home/kali/reports/scan.pdf")
+atlas.ingest("/home/kali/reports/scan.pdf")
 
 # With options
-r.ingest("/home/kali/reports/", domain="cve", namespace="cve")
+atlas.ingest("/home/kali/reports/", domain="cve", namespace="cve")
 
 # With all options
-r.ingest(
+atlas.ingest(
     "/home/kali/reports/pentest.pdf",
     domain="web",
     tags=["pentest", "2026"],
@@ -141,8 +141,8 @@ r.ingest(
 For more control, use the chunker directly:
 
 ```python
-from rag import RAG
-r = RAG()
+from atlas_engine import Atlas
+atlas = Atlas()
 
 # Step 1: Find files
 files = r.chunker.discover("/home/kali/reports/")
@@ -213,10 +213,10 @@ After chunking, when you vectorize the output, you can inject metadata into the 
 r.chunk("/path/to/report.pdf")
 
 # Vectorize with extra metadata injected
-r.vectorize("/home/kali/Desktop/RAG/chunks", domain="web", tags=["pentest", "2026"])
+atlas.vectorize("/home/kali/Desktop/RAG/chunks", domain="web", tags=["pentest", "2026"])
 
 # Or with arbitrary metadata fields
-r.vectorize("/home/kali/Desktop/RAG/chunks",
+atlas.vectorize("/home/kali/Desktop/RAG/chunks",
     domain="cve",
     tags=["vulnerability"],
     metadata={"confidence": "high", "source": "NIST"}
@@ -242,5 +242,5 @@ vectorize notes.md --domain cve --tags exploit,lfi --namespace cve
 - **For long narrative reports**: Consider larger chunks (4000/500)
 - **For code-heavy content**: Consider smaller chunks (1500/150)
 - **Always review a few output chunks** to make sure the splits make sense
-- **Use `r.ingest()`** when you want the fastest path from PDF to searchable Pinecone index
+- **Use `atlas.ingest()`** when you want the fastest path from PDF to searchable Pinecone index
 - **Use `--domain` and `--tags`** on vectorize to add metadata to plain markdown without editing files

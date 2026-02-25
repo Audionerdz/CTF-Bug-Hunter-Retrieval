@@ -1,6 +1,6 @@
-site_name: RAG Framework v2.0
-site_description: A modular Python framework for building RAG systems with Pinecone, OpenAI, and Telegram integration.
-site_url: https://github.com/your-username/RAG
+site_name: Atlas Engine v2.0
+site_description: The most ruthless Retrieval-Augmented Generation framework for offensive security, threat intelligence, and CTF hunting.
+site_url: https://github.com/your-username/atlas-engine
 
 theme:
   name: material
@@ -27,9 +27,9 @@ nav:
   - Getting Started:
       - Installation: getting-started/installation.md
       - Beginner's Guide: getting-started/beginners-guide.md
-  - "Chapter 1: RAG Fundamentals":
-      - What is RAG?: rag-fundamentals/what-is-rag.md
-      - System Overview: rag-fundamentals/overview.md
+  - "Chapter 1: Atlas Fundamentals":
+       - What is Atlas?: rag-fundamentals/what-is-rag.md
+       - System Overview: rag-fundamentals/overview.md
   - "Chapter 2: Pinecone Operations":
       - CLI Essentials: pinecone-operations/cli-essentials.md
   - "Chapter 3: Chunking Methodology":
@@ -57,5 +57,5 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/your-username/RAG
+      link: https://github.com/your-username/atlas-engine
   version: "2.0"

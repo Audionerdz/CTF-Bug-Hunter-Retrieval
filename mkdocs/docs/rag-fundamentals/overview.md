@@ -1,6 +1,6 @@
 # System Overview
 
-A high-level view of how the RAG Framework fits together and how information flows through it.
+A high-level view of how the Atlas Engine fits together and how information flows through it.
 
 ## The Three Pillars
 
@@ -54,7 +54,7 @@ Use in generation
 ### Pillar 3: RAG Architecture
 
 **What:** The framework that ties chunking, search, and generation together.
-**Why:** One object (`r = RAG()`) gives you access to everything.
+**Why:** One object (`atlas = Atlas()`) gives you access to everything.
 
 ## Information Flow
 
@@ -68,7 +68,7 @@ Use in generation
 | Semantic Chunks |  (300-500 word units with YAML frontmatter)
 +--------+--------+
          |
-         v  r.vectorize()
+         v  atlas.vectorize()
 +-----------------+
 | Vector Embeddings|  (3072-dimensional vectors via OpenAI)
 +--------+--------+
@@ -78,7 +78,7 @@ Use in generation
 | Pinecone Index  |  (fast semantic search with metadata filters)
 +--------+--------+
          |
-         v  r.query() / r.ask()
+         v  atlas.query() / atlas.ask()
 +-----------------+
 | Retrieved Chunks|  (top-K similar chunks)
 +--------+--------+

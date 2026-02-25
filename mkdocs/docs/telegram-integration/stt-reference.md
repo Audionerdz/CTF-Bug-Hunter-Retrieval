@@ -18,12 +18,12 @@ stt directory /path/to/loot
 ### From Python (framework)
 
 ```python
-from rag import RAG
-r = RAG()
+from atlas_engine import Atlas
+atlas = Atlas()
 
-r.send("Hello from the framework")
-r.send("/path/to/file.md")
-r.send(results)  # send query results
+atlas.send("Hello from the framework")
+atlas.send("/path/to/file.md")
+atlas.send(results)  # send query results
 ```
 
 ## STT Command Reference
@@ -128,20 +128,20 @@ stt -h
 
 ## Python Framework Methods
 
-### r.send() -- Auto-Detect
+### atlas.send() -- Auto-Detect
 
 The `send()` method automatically detects what you're sending:
 
 ```python
 # Send a text message
-r.send("Hello from RAG")
+atlas.send("Hello from RAG")
 
 # Send a file
-r.send("/path/to/report.md")
+atlas.send("/path/to/report.md")
 
 # Send query results (formatted as markdown)
-results = r.query("LFI", show=False)
-r.send(results)
+results = atlas.query("LFI", show=False)
+atlas.send(results)
 ```
 
 ### rag-send Alias

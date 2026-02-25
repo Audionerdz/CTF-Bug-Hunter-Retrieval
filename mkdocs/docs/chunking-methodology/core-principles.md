@@ -1,6 +1,6 @@
 # Core Principles of Chunking
 
-This is the definitive guide to chunking. If you follow these rules, your RAG system will retrieve the right information every time.
+This is the definitive guide to chunking. If you follow these rules, your Atlas will retrieve the right information every time.
 
 ## What is a Chunk?
 
@@ -132,7 +132,7 @@ Every chunk ID follows this format:
 | `python` | Python programming |
 | `javascript` | JavaScript programming |
 | `network` | Network security |
-| `rag` | RAG systems (meta) |
+| `rag` | Atlass (meta) |
 
 ### Examples
 

@@ -1,18 +1,18 @@
-# RAG Framework v2.0
+# Atlas Engine v2.0
 
 A modular Python framework for building **Retrieval-Augmented Generation** systems. Query your knowledge base, chunk PDFs, vectorize documents into Pinecone, chat with multiple LLM backends, and send results to Telegram -- all from a single Python object.
 
 ## Quick Start
 
 ```python
-from rag import RAG
+from atlas_engine import Atlas
 
-r = RAG()
-r.query("LFI exploitation")
+atlas = Atlas()
+atlas.query("LFI exploitation")
 r.chunk("/path/to/file.pdf")
-r.vectorize("/path/to/chunks")
-r.chat()
-r.ask("How does SQL injection work?")
+atlas.vectorize("/path/to/chunks")
+atlas.chat()
+atlas.ask("How does SQL injection work?")
 ```
 
 ## What's Inside
@@ -31,13 +31,13 @@ r.ask("How does SQL injection work?")
 
 ```
 RAG()
- ├── r.query()       Search the vector database
+ ├── atlas.query()       Search the vector database
  ├── r.chunk()       Split PDFs/text into chunks
- ├── r.vectorize()   Embed and upload chunks to Pinecone
- ├── r.ingest()      chunk + vectorize in one shot
- ├── r.chat()        Interactive chat (Gemini, GPT, Ollama)
- ├── r.ask()         Single question, get answer + sources
- ├── r.send()        Send anything to Telegram
+ ├── atlas.vectorize()   Embed and upload chunks to Pinecone
+ ├── atlas.ingest()      chunk + vectorize in one shot
+ ├── atlas.chat()        Interactive chat (Gemini, GPT, Ollama)
+ ├── atlas.ask()         Single question, get answer + sources
+ ├── atlas.send()        Send anything to Telegram
  ├── r.fetch()       Get a specific chunk by ID
  ├── r.stats()       Pinecone index statistics
  └── r.help()        Show all available commands
@@ -51,12 +51,12 @@ Raw Documents (PDF, text, markdown)
         v  r.chunk()
 Semantic Chunks (.md with YAML frontmatter)
         |
-        v  r.vectorize()
+        v  atlas.vectorize()
 Vector Database (Pinecone, 3072D embeddings)
         |
-        v  r.query() / r.ask()
+        v  atlas.query() / atlas.ask()
 Retrieved Context + LLM = Grounded Answers
         |
-        v  r.send()
+        v  atlas.send()
 Telegram (results, files, reports)
 ```

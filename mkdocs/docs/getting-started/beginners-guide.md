@@ -25,14 +25,14 @@ python3
 Your terminal changes from `$` to `>>>`. This means Python is listening. Now type:
 
 ```python
-from rag import RAG
-r = RAG()
+from atlas_engine import Atlas
+atlas = Atlas()
 ```
 
 You'll see:
 
 ```
-RAG Framework v2.0
+Atlas Engine v2.0
   Index: rag-canonical-v1-emb3large:__default__
   Chunks: 158
   Root: /home/kali/Desktop/RAG
@@ -47,7 +47,7 @@ Now that `r` is ready, try these one at a time:
 ### Search your knowledge base
 
 ```python
-r.query("LFI exploitation")
+atlas.query("LFI exploitation")
 ```
 
 This searches your Pinecone index and shows results right in the terminal. No script needed.
@@ -55,7 +55,7 @@ This searches your Pinecone index and shows results right in the terminal. No sc
 ### Search with filters
 
 ```python
-r.query("privilege escalation", top_k=10, machine="facts")
+atlas.query("privilege escalation", top_k=10, machine="facts")
 ```
 
 ### Get a specific chunk
@@ -73,7 +73,7 @@ r.stats()
 ### Ask a question (AI-powered answer)
 
 ```python
-response, sources = r.ask("How does SQL injection work?")
+response, sources = atlas.ask("How does SQL injection work?")
 print(response)
 ```
 
@@ -88,19 +88,19 @@ r.help()
 Think of the `>>>` prompt as a **chat with your framework**:
 
 ```
-You:       r.query("RCE")
+You:       atlas.query("RCE")
 Framework: [shows 5 results with scores, content, metadata]
 
-You:       r.query("RCE", top_k=10, namespace="cve")
+You:       atlas.query("RCE", top_k=10, namespace="cve")
 Framework: [shows 10 results from the CVE namespace]
 
-You:       r.ask("What is SUID?")
+You:       atlas.ask("What is SUID?")
 Framework: [returns AI-generated answer with cited sources]
 
 You:       r.chunk("/home/kali/reports/scan.pdf")
 Framework: [splits the PDF into chunks, saves them]
 
-You:       r.vectorize("/home/kali/Desktop/RAG/chunks")
+You:       atlas.vectorize("/home/kali/Desktop/RAG/chunks")
 Framework: [embeds and uploads all chunks to Pinecone]
 ```
 
@@ -108,15 +108,15 @@ You stay in the same session. Everything shares the same connection to Pinecone,
 
 ## The `r` Object Explained
 
-When you type `r = RAG()`, you create an object that contains:
+When you type `atlas = Atlas()`, you create an object that contains:
 
 | What | How to Access | Description |
 |------|---------------|-------------|
-| Query Engine | `r.query()` | Search Pinecone |
+| Query Engine | `atlas.query()` | Search Pinecone |
 | Chunker | `r.chunk()` | Split PDFs/text into pieces |
-| Vectorizer | `r.vectorize()` | Embed and upload to Pinecone |
-| Chat | `r.chat()` / `r.ask()` | Talk to an LLM with your data |
-| Telegram | `r.send()` | Send results to Telegram |
+| Vectorizer | `atlas.vectorize()` | Embed and upload to Pinecone |
+| Chat | `atlas.chat()` / `atlas.ask()` | Talk to an LLM with your data |
+| Telegram | `atlas.send()` | Send results to Telegram |
 | Registry | `r.chunks()` | See all tracked chunks |
 
 All of these are connected. The query engine knows about your registry. The vectorizer registers new chunks automatically. Everything stays in sync.
@@ -130,9 +130,9 @@ You can target specific namespaces (think of them as folders in your vector data
 r = RAG(namespace="cve")
 
 # Per command (one-off override)
-r.query("buffer overflow", namespace="ctf")
-r.ask("What is XSS?", namespace="technique")
-r.vectorize("/path/to/chunks", namespace="tools")
+atlas.query("buffer overflow", namespace="ctf")
+atlas.ask("What is XSS?", namespace="technique")
+atlas.vectorize("/path/to/chunks", namespace="tools")
 ```
 
 ## Adding Metadata to Plain Markdown
@@ -141,10 +141,10 @@ If you have `.md` files without YAML frontmatter, you can inject metadata at vec
 
 ```python
 # Add domain and tags to plain markdown files
-r.vectorize("notes.md", domain="web", tags=["exploit", "lfi"])
+atlas.vectorize("notes.md", domain="web", tags=["exploit", "lfi"])
 
 # Add arbitrary metadata fields
-r.vectorize("/chunks/", domain="cve", metadata={"confidence": "high", "source": "NIST"})
+atlas.vectorize("/chunks/", domain="cve", metadata={"confidence": "high", "source": "NIST"})
 ```
 
 From the CLI:
@@ -170,37 +170,37 @@ Or press `Ctrl+D`.
 ### "I have a PDF and want to search it"
 
 ```python
-from rag import RAG
-r = RAG()
-r.ingest("/home/kali/reports/nmap_scan.pdf")
-r.query("open ports")
+from atlas_engine import Atlas
+atlas = Atlas()
+atlas.ingest("/home/kali/reports/nmap_scan.pdf")
+atlas.query("open ports")
 ```
 
 ### "I want to search and send results to Telegram"
 
 ```python
-from rag import RAG
-r = RAG()
-results = r.query("RCE techniques")
-r.send(results)
+from atlas_engine import Atlas
+atlas = Atlas()
+results = atlas.query("RCE techniques")
+atlas.send(results)
 ```
 
 ### "I want to chat with my knowledge base"
 
 ```python
-from rag import RAG
-r = RAG()
-r.chat()          # Gemini (default)
-r.chat("gpt")     # GPT-4o-mini
-r.chat("ollama")   # Ollama local
+from atlas_engine import Atlas
+atlas = Atlas()
+atlas.chat()          # Gemini (default)
+atlas.chat("gpt")     # GPT-4o-mini
+atlas.chat("ollama")   # Ollama local
 ```
 
 ### "I just want a quick answer"
 
 ```python
-from rag import RAG
-r = RAG()
-answer, sources = r.ask("How do I enumerate SUID binaries?")
+from atlas_engine import Atlas
+atlas = Atlas()
+answer, sources = atlas.ask("How do I enumerate SUID binaries?")
 print(answer)
 ```
 

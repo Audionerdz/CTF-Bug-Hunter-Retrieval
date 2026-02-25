@@ -1,6 +1,6 @@
 # Installation
 
-This guide walks you through setting up the RAG Framework from scratch.
+This guide walks you through setting up the Atlas Engine from scratch.
 
 ## 1. Clone the Repository
 
@@ -129,14 +129,14 @@ python3
 ```
 
 ```python
-from rag import RAG
-r = RAG()
+from atlas_engine import Atlas
+atlas = Atlas()
 ```
 
 You should see:
 
 ```
-RAG Framework v2.0
+Atlas Engine v2.0
   Index: rag-canonical-v1-emb3large:__default__
   Chunks: 0
   Root: /home/kali/Desktop/RAG
