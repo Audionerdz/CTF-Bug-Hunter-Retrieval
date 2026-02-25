@@ -47,7 +47,7 @@ Now that `r` is ready, try these one at a time:
 ### Search your knowledge base
 
 ```python
-atlas.query("LFI exploitation")
+atlas.query("LFI exploitation, top_k=2")
 ```
 
 This searches your Pinecone index and shows results right in the terminal. No script needed.
