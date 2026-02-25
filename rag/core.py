@@ -261,17 +261,27 @@ class RAG:
     # VECTORIZE - r.vectorize("...")
     # ==================================================================
 
-    def vectorize(self, path, namespace=None):
+    def vectorize(self, path, namespace=None, domain=None, tags=None, metadata=None):
         """
         Run the full vectorization pipeline on .md chunks.
 
         Args:
             path: path to chunks directory or file.
             namespace: namespace to vectorize into (optional, uses instance default).
+            domain: metadata domain to inject (e.g. "cve", "web").
+            tags: list of tags to inject (e.g. ["exploit", "2026"]).
+            metadata: dict of extra metadata fields to merge into each chunk.
 
         For granular control, use r.vectorizer directly.
         """
-        return self.vectorizer.run(path, registry=self._registry, namespace=namespace)
+        return self.vectorizer.run(
+            path,
+            registry=self._registry,
+            namespace=namespace,
+            domain=domain,
+            tags=tags,
+            metadata=metadata,
+        )
 
     # ==================================================================
     # INGEST - r.ingest("file.pdf") = chunk + vectorize

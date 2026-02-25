@@ -15,6 +15,7 @@ alias vectorize='"'"'python3 /home/kali/Desktop/RAG/src/vectorize_canonical_open
 alias query='"'"'python3 /home/kali/Desktop/RAG/src/query_fast.py'"'"'
 alias rag-query='"'"'python3 /home/kali/Desktop/RAG/src/query_agent.py'"'"'
 alias GeminiRag='"'"'python3 /home/kali/Desktop/RAG/src/gemini_rag.py'"'"'
+alias pa='"'"'/usr/local/bin/pa'"'"'
 alias rag-send='"'"'python3 /home/kali/Desktop/RAG/telegram_sender.py'"'"'
 alias rag-bot='"'"'python3 /home/kali/Desktop/RAG/src/telegram_bot.py'"'"'
 alias rag-sync='"'"'python3 /home/kali/Desktop/RAG/src/sync_registry.py'"'"'
@@ -69,13 +70,14 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "✨ Aliases Installed:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo
-alias | grep -E 'vectorize|query|GeminiRag|rag-send|rag-bot|rag-sync' || echo "⚠️  Run: source $SHELL_CONFIG"
+alias | grep -E 'vectorize|query|GeminiRag|pa=|rag-send|rag-bot|rag-sync' || echo "⚠️  Run: source $SHELL_CONFIG"
 echo
 echo "🎯 Usage:"
 echo "   vectorize /path              - Vectorize chunks"
 echo "   query \"your query\"          - Quick query"
 echo "   rag-query \"query\"           - Query with Telegram"
 echo "   GeminiRag                    - Interactive chat with Gemini"
+echo "   pa \"query\"                  - Pinecone Assistant CLI"
 echo "   rag-send \"message\"          - Send to Telegram"
 echo "   rag-bot                      - Start Telegram bot"
 echo "   rag-sync                     - Sync chunk registry"

@@ -1,0 +1,61 @@
+site_name: RAG Framework v2.0
+site_description: A modular Python framework for building RAG systems with Pinecone, OpenAI, and Telegram integration.
+site_url: https://github.com/your-username/RAG
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: blue
+    accent: cyan
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search:
+      lang: en
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Beginner's Guide: getting-started/beginners-guide.md
+  - "Chapter 1: RAG Fundamentals":
+      - What is RAG?: rag-fundamentals/what-is-rag.md
+      - System Overview: rag-fundamentals/overview.md
+  - "Chapter 2: Pinecone Operations":
+      - CLI Essentials: pinecone-operations/cli-essentials.md
+  - "Chapter 3: Chunking Methodology":
+      - Core Principles: chunking-methodology/core-principles.md
+      - Chunk Fields: chunking-methodology/chunk-fields.md
+      - Chunk ID Examples: chunking-methodology/chunk-id-examples.md
+  - "Chapter 4: Telegram Integration":
+      - STT Command Reference: telegram-integration/stt-reference.md
+  - "Chapter 5: PDF Chunker":
+      - Usage and Examples: pdf-chunker/usage.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+  - tables
+  - admonition
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-username/RAG
+  version: "2.0"

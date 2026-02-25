@@ -270,6 +270,63 @@ class Vectorizer:
         return results
 
     # ==================================================================
+    # METADATA INJECTION (between parse and validate)
+    # ==================================================================
+
+    def _inject_metadata(self, parsed_chunks, domain=None, tags=None, metadata=None):
+        """
+        Inject additional metadata into parsed chunks.
+
+        For plain markdown (no frontmatter): sets missing fields.
+        For frontmatter chunks: merges without overwriting existing fields.
+
+        Args:
+            parsed_chunks: list of ParsedChunk.
+            domain: metadata domain to inject.
+            tags: list of tags to inject.
+            metadata: dict of extra fields to merge.
+        """
+        if not domain and not tags and not metadata:
+            return
+
+        injected = 0
+        for chunk in parsed_chunks:
+            if not chunk.valid:
+                continue
+
+            changed = False
+
+            if domain and "domain" not in chunk.metadata:
+                chunk.metadata["domain"] = domain
+                changed = True
+
+            if tags:
+                existing_tags = chunk.metadata.get("tags", [])
+                if isinstance(existing_tags, str):
+                    existing_tags = [existing_tags]
+                merged = list(set(existing_tags + tags))
+                chunk.metadata["tags"] = merged
+                changed = True
+
+            if metadata:
+                for k, v in metadata.items():
+                    if k not in chunk.metadata:
+                        chunk.metadata[k] = v
+                        changed = True
+
+            # Rebuild metadata_text for embedding
+            if changed:
+                chunk.metadata_text = " ".join(
+                    f"{k}: {v}"
+                    for k, v in chunk.metadata.items()
+                    if not isinstance(v, (list, dict))
+                )
+                injected += 1
+
+        if injected > 0:
+            print(f"Injected metadata into {injected} chunk(s)")
+
+    # ==================================================================
     # PHASE 3 - VALIDATE
     # ==================================================================
 
@@ -465,7 +522,9 @@ class Vectorizer:
     # FULL PIPELINE
     # ==================================================================
 
-    def run(self, path, registry=None, namespace=None):
+    def run(
+        self, path, registry=None, namespace=None, domain=None, tags=None, metadata=None
+    ):
         """
         Execute the full vectorization pipeline.
 
@@ -477,6 +536,9 @@ class Vectorizer:
             path: directory, file, or name.
             registry: optional Registry instance.
             namespace: Pinecone namespace (optional, override instance default).
+            domain: metadata domain to inject (e.g. "cve", "web").
+            tags: list of tags to inject (e.g. ["exploit", "2026"]).
+            metadata: dict of extra metadata fields to merge into each chunk.
 
         Returns:
             dict with pipeline stats.
@@ -489,6 +551,10 @@ class Vectorizer:
         print(f"{'=' * 60}")
         print(f"Path: {path}")
         print(f"Index: {self.index_name}{ns_display}")
+        if domain:
+            print(f"Domain: {domain}")
+        if tags:
+            print(f"Tags: {tags}")
         print(f"Supports: .md WITH & WITHOUT frontmatter\n")
 
         # Phase 1
@@ -497,6 +563,9 @@ class Vectorizer:
 
         # Phase 2
         parsed = self.parse(files)
+
+        # Inject metadata (domain, tags, extra metadata) into parsed chunks
+        self._inject_metadata(parsed, domain=domain, tags=tags, metadata=metadata)
 
         # Phase 3
         self.validate(parsed)
