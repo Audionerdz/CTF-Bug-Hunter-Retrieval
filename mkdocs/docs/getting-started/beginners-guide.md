@@ -54,6 +54,21 @@ atlas.query("LFI exploitation, top_k=2")
 atlas.query("Ffuf cheatsheet") # Default 5
 ```
 
+## Common query flags
+
+```
+ atlas.query(
+      "search text",
+      top_k=5,           # Número de resultados
+      machine="facts",   # Filtrar por máquina
+      domain="web",      # Filtrar por dominio
+      max_chars=1000,    # Limitar caracteres del contenido
+      namespace="cve",   # Namespace específico
+      show=True          # Mostrar en terminal
+  )
+```
+
+
 This searches your Pinecone index and shows results right in the terminal. No script needed.
 
 ### Search with filters
