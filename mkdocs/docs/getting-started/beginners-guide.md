@@ -75,7 +75,7 @@ atlas.query("file transfer linpeas", top_k=1, domain="linux", max_chars=200)
 
 ```python3
 atlas.query("LFI exploitation", top_k=10, namespace="cve")
-O en CLI:
+Or in CLI:
 atlas-query "LFI exploitation" 10 --namespace cve
 ```
 
