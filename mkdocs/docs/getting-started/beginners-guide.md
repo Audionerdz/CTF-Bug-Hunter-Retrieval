@@ -54,6 +54,10 @@ atlas.query("LFI exploitation, top_k=2")
 atlas.query("Ffuf cheatsheet") # Default 5
 ```
 
+```python
+atlas.query("LFI exploitation", top_k=10, domain="web", max_chars=1000)
+```
+
 ## Common query flags
 
 ```
