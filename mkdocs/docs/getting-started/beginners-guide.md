@@ -71,12 +71,12 @@ atlas-query "LFI exploitation" 10 --namespace cve
 ```
  atlas.query(
       "search text",
-      top_k=5,           # Número de resultados
-      machine="facts",   # Filtrar por máquina
-      domain="web",      # Filtrar por dominio
-      max_chars=1000,    # Limitar caracteres del contenido
-      namespace="cve",   # Namespace específico
-      show=True          # Mostrar en terminal
+      top_k=5,           # Númber of results
+      machine="facts",   # Filter by machine
+      domain="web",      # Filter by domain
+      max_chars=200,     # Limit content characters
+      namespace="cve",   # Specific namespace
+      show=True          # Show in terminal 
   )
 ```
 
