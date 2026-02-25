@@ -117,6 +117,34 @@ answer, sources = atlas.ask("How does SQL injection work?", backend="gpt")
 print(answer)
 ```
 
+#### Understanding Sources
+
+The `sources` variable contains metadata about which chunks were used to generate the answer:
+
+```python
+answer, sources = atlas.ask("SQL injection")
+
+# sources contains: chunk_id, score, domain, file_path, metadata
+# It does NOT contain the full content (only references)
+
+for source in sources:
+    print(source['chunk_id'])    # ID of the chunk
+    print(source['score'])        # Relevance score (0-1)
+    print(source['domain'])       # web, linux, etc.
+    print(source['file_path'])    # Where the file is located
+```
+
+If you want to see the **full content** of a source chunk:
+
+```python
+answer, sources = atlas.ask("SQL injection")
+
+# Get the full content of the first source
+first_source = sources[0]
+chunk = atlas.fetch(first_source['chunk_id'])
+print(chunk['content'])  # Full content of the chunk
+```
+
 The framework searches your knowledge base, retrieves relevant chunks, and uses an LLM to generate an answer with cited sources.
 
 ### See all available commands
