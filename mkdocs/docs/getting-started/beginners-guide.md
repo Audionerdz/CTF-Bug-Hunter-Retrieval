@@ -55,7 +55,7 @@ atlas.query("Ffuf cheatsheet") # Default 5
 ```
 
 ```python
-atlas.query("LFI exploitation", top_k=10, domain="web", max_chars=1000)
+atlas.query("file transfer linpeas", top_k=1, domain="linux", max_chars=200)
 ```
 
 ## Common query flags
