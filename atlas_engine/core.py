@@ -488,6 +488,7 @@ CHAT (3 backends):
   atlas.chat("ollama")                         # Ollama local
   response, sources = atlas.ask("question")
   response, sources = atlas.ask("q", backend="gpt")
+  response, sources = atlas.ask("q", backend="ollama")
   response, sources = atlas.ask("q", namespace="cve")  # ask within specific namespace
 
 TELEGRAM:
