@@ -58,6 +58,14 @@ atlas.query("Ffuf cheatsheet") # Default 5
 atlas.query("file transfer linpeas", top_k=1, domain="linux", max_chars=200)
 ```
 
+### Search across different namespaces
+
+```python3
+atlas.query("LFI exploitation", top_k=10, namespace="cve")
+O en CLI:
+atlas-query "LFI exploitation" 10 --namespace cve
+```
+
 ## Common query flags
 
 ```
