@@ -21,9 +21,8 @@ ENV_DIR = RAG_ROOT / ".env"
 # Chunk registry file
 CHUNK_REGISTRY = RAG_ROOT / "chunk_registry.json"
 
-# Default directories for chunks
-CHUNKS_DIR = RAG_ROOT / "chunks"
-DEFAULT_CHUNKS_DIR = RAG_ROOT / "default"
+# Default directory for all chunks (generated or otherwise)
+CHUNKS_DIR = RAG_ROOT / "default"
 
 # ============================================================================
 # PINECONE CONFIGURATION
