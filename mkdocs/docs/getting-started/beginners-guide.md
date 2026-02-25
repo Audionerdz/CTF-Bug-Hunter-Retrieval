@@ -120,7 +120,7 @@ Get an answer from your knowledge base using Gemini (default):
 
 ```python
 answer, sources = atlas.ask("How does SQL injection work?")
-print(answer)
+print(answer)  #Gemini Default 
 ```
 
 Or use ChatGPT instead:
