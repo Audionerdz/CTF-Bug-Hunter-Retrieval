@@ -161,21 +161,29 @@ class RAG:
         phase=None,
         show=True,
         namespace=None,
+        max_chars=None,
     ):
         """
         Search the RAG index.
 
         Args:
             text: search query.
-            top_k: number of results.
+            top_k: number of results (default: 5).
             machine: filter by machine name.
             domain: filter by domain.
             phase: filter by phase.
-            show: print results to terminal.
+            show: print results to terminal (default: True).
             namespace: namespace to search in (optional, uses instance default).
+            max_chars: max characters to show per chunk (default: None = full content).
 
         Returns:
             List of result dicts.
+
+        Examples:
+            atlas.query("XXE exploitation")
+            atlas.query("buffer overflow", top_k=10)
+            atlas.query("RCE", top_k=3, max_chars=1000, show=True)
+            atlas.query("LFI", namespace="cve", show=False)  # No terminal output
         """
         results = self.query_engine.search(
             text,
@@ -186,7 +194,7 @@ class RAG:
             namespace=namespace,
         )
         if show:
-            self.query_engine.format_terminal(results, query=text)
+            self.query_engine.format_terminal(results, query=text, max_chars=max_chars)
         return results
 
     def fetch(self, chunk_id, namespace=None):
