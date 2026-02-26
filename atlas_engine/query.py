@@ -190,19 +190,48 @@ class QueryEngine:
 
         results = idx.fetch(ids=[chunk_id], namespace=ns)
 
-        if not results or not results.get("vectors"):
+        if not results:
             return None
 
-        chunk = results["vectors"].get(chunk_id)
+        if isinstance(results, dict):
+            vectors = results.get("vectors")
+        else:
+            vectors = getattr(results, "vectors", None)
+
+        if not vectors:
+            return None
+
+        chunk = vectors.get(chunk_id) if isinstance(vectors, dict) else None
         if not chunk:
             return None
 
-        meta = chunk.get("metadata", {})
+        if isinstance(chunk, dict):
+            meta = chunk.get("metadata", {})
+        else:
+            meta = getattr(chunk, "metadata", {})
         return {
             "chunk_id": chunk_id,
             "metadata": meta,
-            "content": meta.get("content", ""),
+            "content": meta.get("content", "")
+            if isinstance(meta, dict)
+            else getattr(meta, "content", ""),
         }
+
+    def delete(self, chunk_id, namespace=None):
+        """
+        Delete a specific chunk by ID from Pinecone.
+
+        Args:
+            chunk_id: ID of the chunk to delete.
+            namespace: namespace to delete from (optional, uses instance default if not provided).
+        """
+        idx = self._get_index()
+
+        # Resolve namespace
+        ns = config.resolve_namespace(namespace) if namespace else self.namespace
+
+        idx.delete(ids=[chunk_id], namespace=ns)
+        return True
 
     # ------------------------------------------------------------------
     # Formatting

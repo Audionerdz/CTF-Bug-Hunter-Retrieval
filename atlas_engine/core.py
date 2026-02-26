@@ -223,6 +223,19 @@ class RAG:
             print(f"Chunk not found: {chunk_id}")
         return result
 
+    def delete(self, chunk_id, namespace=None):
+        """
+        Delete a specific chunk by ID.
+
+        Args:
+            chunk_id: the chunk ID.
+            namespace: namespace to delete from (optional, uses instance default).
+        """
+        deleted = self.query_engine.delete(chunk_id, namespace=namespace)
+        if deleted:
+            print(f"Deleted chunk: {chunk_id}")
+        return deleted
+
     # ==================================================================
     # CHUNK - r.chunk("file.pdf")
     # ==================================================================
@@ -429,77 +442,26 @@ class RAG:
     def help(self):
         """Show available commands."""
         print("""
-RAG Framework v2.0 - Quick Reference
-======================================
+ Atlas Engine v2.0 - Quick Reference
+ ======================================
 
-INITIALIZATION (with namespace support):
-  atlas = Atlas()                                # default index & namespace
-  atlas = Atlas(index="my-index")               # custom index
-  atlas = Atlas(namespace="cve")                # custom namespace preset
-  atlas = Atlas(index="my-index", namespace="ctf")  # both custom
+ INITIALIZATION:
+   atlas = Atlas()                              # default index & namespace
+   atlas = Atlas(namespace="cve")              # namespace preset
 
-  Namespace presets: "root" (default), "cve", "technique", "ctf", "tools", "payloads"
+ CORE COMMANDS:
+   atlas.query("LFI", top_k=5)                 # search
+   atlas.ask("What is LFI?")                   # single answer
+   atlas.chat()                                 # interactive chat (default backend)
+   atlas.chat(backend="gpt")                   # switch backend
+   atlas.fetch("chunk_id::here")              # fetch a chunk
+   atlas.delete("chunk_id::here")             # delete a chunk
+   atlas.vectorize("/path/file.md")           # vectorize chunks
+   atlas.stats()                                # index stats
+   atlas.help()                                 # this reference
 
-QUERY (with namespace override):
-  atlas.query("LFI exploitation")             # search (top 5)
-  atlas.query("RCE", top_k=10)                # more results
-  atlas.query("privesc", machine="gavel")     # filter by machine
-  atlas.query("text", namespace="cve")        # search in specific namespace
-  atlas.fetch("chunk_id::here")               # fetch specific chunk
-  atlas.fetch("chunk_id", namespace="ctf")    # fetch from specific namespace
-
-CHUNK (PDF/text -> markdown):
-  atlas.chunk("/path/to/file.pdf")             # chunk a PDF
-  atlas.chunk("/path/to/pdfs/")               # chunk all PDFs in dir
-  atlas.chunk("file.pdf", domain="cve")       # with domain tag
-  atlas.chunk("file.pdf", chunk_size=1500)    # custom size
-
-  # Granular:
-  files = atlas.chunker.discover("/path")
-  docs = atlas.chunker.load(files)
-  chunks = atlas.chunker.split(docs)
-  atlas.chunker.save(chunks)
-
-VECTORIZE (.md chunks -> Pinecone):
-  atlas.vectorize("/path/to/chunks")           # full pipeline (default namespace)
-  atlas.vectorize("my_chunk.md")              # single file
-  atlas.vectorize("/path", namespace="cve")   # vectorize into specific namespace
-
-  Supports:
-    - Markdown WITH frontmatter (---YAML---): Use metadata from YAML
-    - Markdown WITHOUT frontmatter: Auto-generate metadata, edit in Pinecone
-
-  # Granular:
-  files = atlas.vectorizer.discover("/path")
-  parsed = atlas.vectorizer.parse(files)                    # handles both cases
-  validated = atlas.vectorizer.validate(parsed)             # auto-generates chunk_id if missing
-  embedded = atlas.vectorizer.embed(validated)
-  atlas.vectorizer.upsert(embedded)
-  atlas.vectorizer.register(files)
-
-INGEST (chunk + vectorize in one shot):
-  atlas.ingest("/path/to/file.pdf")            # PDF -> chunks -> Pinecone
-  atlas.ingest("/path/to/pdfs/", domain="cve") # batch + domain
-  atlas.ingest("/path", namespace="ctf")      # ingest into specific namespace
-
-CHAT (3 backends):
-  atlas.chat()                                 # Gemini (default)
-  atlas.chat("gpt")                           # GPT-4o-mini
-  atlas.chat("ollama")                         # Ollama local
-  response, sources = atlas.ask("question")
-  response, sources = atlas.ask("q", backend="gpt")
-  response, sources = atlas.ask("q", backend="ollama")
-  response, sources = atlas.ask("q", namespace="cve")  # ask within specific namespace
-
-TELEGRAM:
-  atlas.send("hello")                          # send message
-  atlas.send("/path/to/file.md")             # send file
-  atlas.send(results)                          # send query results
-
-UTILITIES:
-  atlas.sync()                             # sync registry
-  atlas.stats()                            # index statistics
-  atlas.chunks()                           # list chunks
-  atlas.save(results, "query")            # save as markdown
-  atlas.help()                             # this reference
+ NAMESPACE OVERRIDES:
+   atlas.query("LFI", namespace="cve")        # search in namespace
+   atlas.vectorize("/path", namespace="ctf")  # vectorize into namespace
+   atlas.delete("chunk_id", namespace="ctf")  # delete from namespace
 """)

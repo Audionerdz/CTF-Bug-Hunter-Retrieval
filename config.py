@@ -14,15 +14,20 @@ from pathlib import Path
 
 # RAG Root directory (where this script is located)
 RAG_ROOT = Path(__file__).parent.resolve()
+ATLAS_ROOT = RAG_ROOT
 
 # Environment files directory
 ENV_DIR = RAG_ROOT / ".env"
+ATLAS_ENV = ENV_DIR
 
 # Chunk registry file
 CHUNK_REGISTRY = RAG_ROOT / "chunk_registry.json"
+ATLAS_REGISTRY = CHUNK_REGISTRY
 
 # Default directory for all chunks (generated or otherwise)
 CHUNKS_DIR = RAG_ROOT / "default"
+DEFAULT_CHUNKS_DIR = CHUNKS_DIR
+ATLAS_DEFAULT = CHUNKS_DIR
 
 # ============================================================================
 # PINECONE CONFIGURATION

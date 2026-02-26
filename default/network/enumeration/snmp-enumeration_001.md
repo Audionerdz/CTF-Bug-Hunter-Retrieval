@@ -23,8 +23,20 @@ Antes de intentar ataques complejos en v3, se debe agotar la fase de descubrimie
     ```
 * **Intención**: Si responde a `public`, el vector de ataque se desplaza de "intrusión" a "exfiltración de datos de gestión".
 
-## 2. El "Walk" y el OID Crítico: `.1.3.6.1.2.1.1.1.0`
-Al realizar un `snmpwalk`, la primera línea de respuesta suele ser la más valiosa. El OID `.1.3.6.1.2.1.1.1.0` corresponde a **sysDescr**.
+## 2. Ejecución: El "Walk" Inicial
+Una vez confirmada la comunidad (ej. `public`), el primer paso operativo es volcar el contenido completo del agente para su análisis posterior.
+
+* **Comando Táctico**:
+    ```bash
+    # Volcado completo usando v2c y comunidad public
+    snmpwalk -v 2c -c public <TARGET_IP>
+    ```
+* **Nota**: Si el output es masivo, redirige a un archivo (`> snmp_dump.txt`) para realizar búsquedas (`grep`) de strings sensibles como "pass", "key", o "admin".
+
+
+
+## 3. El OID Crítico: `.1.3.6.1.2.1.1.1.0` (sysDescr)
+Al realizar el `snmpwalk`, la primera línea de respuesta suele ser la más valiosa. El OID `.1.3.6.1.2.1.1.1.0` corresponde a **sysDescr**.
 
 ### Anatomía del OID de Sistema
 La ruta `.1.3.6.1.2.1.1` (ISO.Org.DoD.Internet.Mgmt.MIB-2.System) es el estándar universal para describir el dispositivo.
@@ -33,7 +45,7 @@ La ruta `.1.3.6.1.2.1.1` (ISO.Org.DoD.Internet.Mgmt.MIB-2.System) es el estánda
 
 
 
-## 3. Hoja de Ruta de Exfiltración (Post-Exploitation)
+## 4. Hoja de Ruta de Exfiltración (Post-Exploitation)
 Una vez obtenido el acceso de lectura, no te detengas en la descripción. Busca "joyas" en estos OIDs específicos de la MIB-2:
 
 | OID / Nombre | Función Táctica | Valor para el Atacante |
@@ -44,7 +56,7 @@ Una vez obtenido el acceso de lectura, no te detengas en la descripción. Busca 
 | **ipNetToMediaPhysAddress** (...4.22.1.2) | Tabla ARP | Mapeo de la red interna (Pivoting). |
 | **tcpConnRemAddress** (...6.13.1.2) | Netstat | Conexiones activas y comunicaciones. |
 
-## 4. Análisis de Fallo (Debriefing)
+## 5. Análisis de Fallo (Debriefing)
 * **Error cometido**: Foco excesivo en SNMPv3 y escaneos agresivos que causaron bloqueo.
 * **Corrección**: Volver a `v2c -c public`.
 * **Resultado**: La contraseña de acceso estaba en la descripción del sistema (`sysDescr`), visible desde el primer segundo del "walk".
