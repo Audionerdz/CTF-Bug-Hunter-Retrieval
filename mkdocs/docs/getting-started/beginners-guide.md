@@ -8,6 +8,12 @@ Atlas Engine is meant to be used from a single interactive Python session.
 python3
 ```
 
+From the venv (one line):
+
+```bash
+source venv/bin/activate && python3
+```
+
 ```python
 from atlas_engine import Atlas
 atlas = Atlas()
