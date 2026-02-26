@@ -149,6 +149,31 @@ If you see this, the framework is ready.
 
 Type `atlas.help()` to see all available commands.
 
+## Python API (The Power User Way)
+
+Use the Python API when you want full control and fewer CLI steps:
+
+```python
+from atlas_engine import Atlas
+
+atlas = Atlas()
+atlas.query("LFI", top_k=3)
+atlas.ask("What is LFI?")  # default: Gemini
+atlas.ask("What is LFI?", backend="gpt")
+atlas.chat()               # interactive session
+atlas.vectorize("/path/to/chunk.md")
+atlas.vectorize_text(
+    """# My Chunk\n\nShort content here.""",
+    chunk_id="technique::web::recon::example::001",
+    path="default/web/recon/example_001.md",
+    domain="web",
+    tags=["pentesting"],
+    metadata={"chunk_type": "technique", "confidence": 3},
+)
+```
+
+Tip: if you do not pass `namespace`, Atlas uses the default namespace automatically.
+
 ## Common Flags Reference
 
 These flags work across most CLI scripts:
