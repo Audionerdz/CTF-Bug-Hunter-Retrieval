@@ -77,6 +77,16 @@ Use this to quickly map input points during recon.
 
 This example includes metadata via `domain`, `tags`, and `metadata`.
 
+## Chat (different backends)
+
+```python
+atlas.chat()                 # default (Gemini)
+atlas.chat(backend="gpt")   # OpenAI
+atlas.chat(backend="ollama") # local
+```
+
+Note: `atlas.chat()` is interactive; you do not need `print(answer)` there. For a single answer, use `atlas.ask()`.
+
 ## Exit
 
 ```python
