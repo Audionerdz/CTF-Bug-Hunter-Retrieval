@@ -7,6 +7,7 @@ This guide walks you through setting up the Atlas Engine from scratch.
 ```bash
 git clone https://github.com/your-username/RAG.git
 cd RAG
+export ATLAS_ROOT="$(pwd)"
 ```
 
 ## 2. Create a Virtual Environment
@@ -19,7 +20,7 @@ source venv/bin/activate
 You should see `(venv)` in your terminal prompt. Every time you open a new terminal, activate it again with:
 
 ```bash
-source /home/kali/Desktop/RAG/venv/bin/activate
+source "$ATLAS_ROOT/venv/bin/activate"
 ```
 
 ## 3. Install Dependencies
@@ -43,16 +44,16 @@ This installs everything the framework needs:
 
 ## 4. Set Up API Keys
 
-The framework reads API keys from `.env/` files inside the RAG directory. Create the directory and files:
+The framework reads API keys from `.env/` files inside the repo. Create the directory and files:
 
 ```bash
-mkdir -p /home/kali/Desktop/RAG/.env
+mkdir -p "$ATLAS_ROOT/.env"
 ```
 
 ### Pinecone (Required)
 
 ```bash
-echo "PINECONE_API_KEY=your_pinecone_key_here" > /home/kali/Desktop/RAG/.env/pinecone.env
+echo "PINECONE_API_KEY=your_pinecone_key_here" > "$ATLAS_ROOT/.env/pinecone.env"
 ```
 
 Get your key from [Pinecone Console](https://app.pinecone.io/) > API Keys.
@@ -60,23 +61,23 @@ Get your key from [Pinecone Console](https://app.pinecone.io/) > API Keys.
 ### OpenAI (Required)
 
 ```bash
-echo "OPENAI_API_KEY=your_openai_key_here" > /home/kali/Desktop/RAG/.env/openai.env
+echo "OPENAI_API_KEY=your_openai_key_here" > "$ATLAS_ROOT/.env/openai.env"
 ```
 
 Get your key from [OpenAI Platform](https://platform.openai.com/api-keys).
 
-### Google Gemini (Optional -- needed for Gemini chat backend)
+### Google Gemini (Optional - needed for Gemini chat backend)
 
 ```bash
-echo "GOOGLE_API_KEY=your_google_key_here" > /home/kali/Desktop/RAG/.env/gemini.env
+echo "GOOGLE_API_KEY=your_google_key_here" > "$ATLAS_ROOT/.env/gemini.env"
 ```
 
 Get your key from [Google AI Studio](https://aistudio.google.com/app/apikey).
 
-### Telegram (Optional -- needed for Telegram integration)
+### Telegram (Optional - needed for Telegram integration)
 
 ```bash
-cat > /home/kali/Desktop/RAG/.env/telegram.env << 'EOF'
+cat > "$ATLAS_ROOT/.env/telegram.env" << 'EOF'
 TELEGRAM_BOT_TOKEN=your_bot_token_here
 TELEGRAM_CHAT_ID=your_chat_id_here
 EOF
@@ -89,7 +90,7 @@ Get your bot token from [@BotFather](https://t.me/BotFather) on Telegram.
 Quick check that everything is in place:
 
 ```bash
-ls /home/kali/Desktop/RAG/.env/
+ls "$ATLAS_ROOT/.env/"
 # Should show: pinecone.env  openai.env  gemini.env  telegram.env
 ```
 
@@ -98,7 +99,7 @@ ls /home/kali/Desktop/RAG/.env/
 Aliases let you run framework commands directly from anywhere in your terminal.
 
 ```bash
-bash /home/kali/Desktop/RAG/setup_aliases.sh
+bash "$ATLAS_ROOT/setup_aliases.sh"
 ```
 
 This adds the following aliases to your shell:
@@ -139,12 +140,12 @@ You should see:
 Atlas Engine v2.0
   Index: rag-canonical-v1-emb3large:__default__
   Chunks: 0
-  Root: /home/kali/Desktop/RAG
+  Root: /path/to/RAG
 ```
 
 If you see this, the framework is ready.
 
-Type `r.help()` to see all available commands.
+Type `atlas.help()` to see all available commands.
 
 ## Common Flags Reference
 
