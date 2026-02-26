@@ -143,19 +143,6 @@ for source in sources:
     print(source['file_path'])    # Where the file is located
 ```
 
-If you want to see the **full content** of a source chunk:
-
-```python
-answer, sources = atlas.ask("SQL injection")
-
-# Get the full content of the first source
-first_source = sources[0]
-chunk = atlas.fetch(first_source['chunk_id'])
-print(chunk['content'])  # Full content of the chunk
-```
-
-The framework searches your knowledge base, retrieves relevant chunks, and uses an LLM to generate an answer with cited sources.
-
 ### See all available commands
 
 ```python
@@ -173,7 +160,8 @@ Framework: [shows 5 results with scores, content, metadata]
 You:       atlas.query("RCE", top_k=10, namespace="cve")
 Framework: [shows 10 results from the CVE namespace]
 
-You:       atlas.ask("What is SUID?")
+You:       atlas.chat("What is SUID?")
+           print(answer)
 Framework: [returns AI-generated answer with cited sources]
 
 You:       atlas.chunk("/home/kali/reports/scan.pdf")
