@@ -1,0 +1,14 @@
+services:
+  atlas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: atlas-engine:local
+    container_name: atlas-engine
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./default:/app/default
+      - ./chat_history:/app/chat_history
+      - ./.env:/app/.env:ro
+    command: ["src/gemini_rag.py", "--backend", "gemini"]

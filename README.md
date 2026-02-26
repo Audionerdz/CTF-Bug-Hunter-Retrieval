@@ -53,6 +53,32 @@ echo "TELEGRAM_BOT_TOKEN=your_bot_token"      > .env/telegram.env
 
 ---
 
+## Docker (Recommended for CI/CD)
+
+Build locally:
+
+```bash
+docker build -t atlas-engine:local .
+```
+
+Run interactive chat (uses your local `.env/` and persists `chat_history/`):
+
+```bash
+docker compose up --build
+```
+
+Run one-off smoke command inside container:
+
+```bash
+docker run --rm atlas-engine:local -c "from atlas_engine import Atlas; Atlas(); print('ok')"
+```
+
+Notes:
+- The image includes `default/`, `src/`, `atlas_engine/`, and `config.py`.
+- API keys are injected at runtime via mounted `.env/` files.
+
+---
+
 ## Atlas in Action
 
 ### Python API (The Power User Way)
@@ -319,6 +345,14 @@ On a 500-chunk knowledge base (~2M tokens):
 - [ ] Fine-tuning data generation from chunks
 - [ ] Web UI dashboard for index management
 - [ ] Slack integration alongside Telegram
+
+---
+
+## GitHub Actions Automation
+
+This repo includes `.github/workflows/docker-ci.yml` with:
+- `build-and-smoke-test` on every PR/push (builds Docker image + runs container smoke test).
+- `publish-ghcr` on `main` pushes (publishes image to `ghcr.io/<owner>/<repo>:latest` and `:sha`).
 
 ---
 
