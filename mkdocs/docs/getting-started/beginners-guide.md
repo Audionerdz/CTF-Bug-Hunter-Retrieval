@@ -14,6 +14,12 @@ From the venv (one line):
 source venv/bin/activate && python3
 ```
 
+Quick test (ask from venv in one line):
+
+```bash
+source venv/bin/activate && python3 -c 'from atlas_engine import Atlas; atlas = Atlas(); answer, sources = atlas.ask("What is LFI?"); print(answer); print(f"sources: {len(sources)}")'
+```
+
 ```python
 from atlas_engine import Atlas
 atlas = Atlas()
