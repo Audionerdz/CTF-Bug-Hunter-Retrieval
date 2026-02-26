@@ -25,6 +25,8 @@ atlas = Atlas()
 ```python
 atlas.query("LFI", top_k=3)
 atlas.ask("What is LFI?")
+atlas.ask("What is LFI?", backend="gpt")
+atlas.ask("What is LFI?", backend="ollama")
 atlas.chat()
 atlas.chat(backend="gpt")
 atlas.fetch("technique::web::lfi::path-traversal::001")
