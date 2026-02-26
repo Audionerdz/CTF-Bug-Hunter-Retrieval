@@ -50,57 +50,22 @@ atlas = Atlas()
 
 atlas.vectorize_text(
     """
-# Checklist Maestro de Puntos de Entrada para Inyección (V2)
+# Injection Surface Checklist (Short)
 
-Este checklist sirve como mapa táctico para la interceptación de peticiones. Todo dato que viaje del cliente al servidor es hostil por definición. Pruébalos en orden de prioridad durante la fase de descubrimiento.
+Use this to quickly map input points during recon.
 
-## 1. Parámetros de Entrada Directa (GET/POST)
-Vectores clásicos que suelen mapear directamente a consultas de base de datos (`WHERE`, `ORDER`, `LIMIT`).
+## Direct Inputs (GET/POST)
+* **GET**: `id`, `page`, `q`, `search`, `user`, `order`.
+* **POST**: `username`, `email`, `password`, `comment`, `message`.
+* **Path**: `/user/1234/profile` -> `1234` is often an internal ID.
 
-* **URL (GET)**: `id`, `page`, `product`, `user`, `order`, `post`, `article`, `cat`, `category`, `lang`, `langid`, `ref`, `search`, `q`, `query`, `item`, `tag`, `thread`.
-* **Formularios (POST)**: `username`, `user`, `email`, `password`, `old_password`, `comment`, `message`, `name`, `title`, `body`, `date`, `amount`, `quantity`, `address`, `phone`.
-* **Path Params**: `/user/1234/profile` -> El segmento `1234` suele ser un `id` en la query interna.
+## APIs and Headers
+* **JSON**: `{ "id": 1, "filter": "..." }`
+* **GraphQL**: fields in `query` and `variables`
+* **Headers**: `Cookie`, `Authorization`, `Referer`, `X-Forwarded-For`
 
-## 2. APIs y Estructuras Modernas
-Formatos donde la inyección puede romper la lógica del parser (JSON/XML/GraphQL).
-
-* **REST / JSON**: Valores en el cuerpo: `{ "id": ..., "filter": "...", "limit": ... }`.
-* **GraphQL**: Campos en `query` y `variables` utilizados por el resolver.
-* **XML / SOAP**: Tags internos utilizados en conversiones o consultas.
-* **Ajax / XHR**: Peticiones asíncronas visibles en la consola que contienen parámetros JSON/POST.
-
-## 3. Cabeceras, Cookies y Metadatos
-Entradas "invisibles" que el servidor suele procesar para analítica, sesiones o logs.
-
-* **Cabeceras HTTP**: `Cookie`, `Authorization` (token), `Referer`, `X-Forwarded-For`, `User-Agent`, `Host`.
-* **Cookies**: Valores como `sessionid`, `user` o `auth` que el servidor re-valida contra la DB.
-* **Subida de Archivos**: Atributos como `filename` o metadatos (EXIF) que se consultan posteriormente.
-* **Redirecciones**: Parámetros `next`, `return`, `redirect`, `url`, `goto`.
-
-## 4. Paneles Internos e Integraciones
-Áreas con menos auditoría de seguridad que suelen confiar en el input "interno".
-
-* **Admin Panels**: Campos de búsqueda avanzada, filtros manuales y acciones en lote (bulk actions).
-* **Import/Export**: Procesamiento de archivos CSV/Excel que terminan escribiéndose en la DB.
-* **Consultas Externas**: Entradas de usuario (`username`) que disparan consultas adicionales a LDAP, OS o bases externas.
-
-## 5. Oráculo de Respuesta: Qué Observar
-Monitoriza estas anomalías al inyectar (sin importar el payload):
-
-| Indicador | Análisis Técnico |
-| :--- | :--- |
-| **Cambio de Contenido** | Diferencias en el número de filas o registros mostrados. |
-| **Diferencia de Tiempo** | Respuestas significativamente lentas (Posible Blind por tiempo). |
-| **Anomalía de Estado** | Cambios inesperados en códigos HTTP (ej. 500 Internal Error vs 200 OK). |
-| **Revelación de Estructura** | Stack traces, errores de sintaxis de DB o plantillas de error detalladas. |
-
-## 6. Tips para Labs y HTB
-* **No validación**: Si acepta números, prueba operaciones (ej. `?page=2-1`).
-* **Stored SQLi**: Inyecta en formularios de contacto o comentarios que persistan en el panel de admin.
-* **Fuentes alternativas**: Revisa inputs `hidden`, metadatos HTML o datos en `localStorage` que la app reenvía.
-
-> [!IMPORTANT]
-> **Checklist de Burp/Reaper**: Intercepta, manda al Repeater y recorre sistemáticamente cada parámetro de esta lista. La persistencia es lo que encuentra la vulnerabilidad.
+## Response Signals
+* Content changes, time delays, HTTP 500 vs 200, stack traces
 """,
     chunk_id="technique::web::recon::injection-surface-mapping::001",
     path="default/web/recon/injection-surface-mapping_001.md",
@@ -109,6 +74,8 @@ Monitoriza estas anomalías al inyectar (sin importar el payload):
     metadata={"chunk_type": "technique", "confidence": 5, "reuse_level": 2},
 )
 ```
+
+This example includes metadata via `domain`, `tags`, and `metadata`.
 
 ## Exit
 
