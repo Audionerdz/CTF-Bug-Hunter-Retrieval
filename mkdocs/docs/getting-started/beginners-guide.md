@@ -37,12 +37,9 @@ atlas.help()
 ```
 
 Ask vs chat:
-- `atlas.ask()` returns one answer immediately.
+- `atlas.ask()` returns one answer and a sources list.
 - `atlas.chat()` starts an interactive session where you keep asking multiple questions.
 - Default model for `atlas.ask()` is Gemini unless you pass `backend="gpt"` or `backend="ollama"`.
-
-Notes:
-- `atlas.chat()` is interactive; use `atlas.ask()` for a single answer.
 - If you do not pass `namespace`, Atlas uses the default namespace automatically.
 
 ## Vectorize without frontmatter (manual metadata)
@@ -107,7 +104,6 @@ atlas-chat --backend gpt --model gpt-4o-mini
 atlas-chat --backend ollama --model llama3
 ```
 
-Note: `atlas.chat()` is interactive; you do not need `print(answer)` there. For a single answer, use `atlas.ask()`.
 
 ## Exit
 
