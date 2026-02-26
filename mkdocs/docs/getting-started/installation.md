@@ -153,55 +153,59 @@ Type `atlas.help()` to see all available commands.
 
 ```python
 from atlas_engine import Atlas
-
-# Initialize
 atlas = Atlas()
 
-# Search your knowledge base
-results = atlas.query("SQL injection in stored procedures")
-for chunk in results:
-    print(f"[{chunk['domain']}] {chunk['chunk_id']}")
-    print(chunk["content"][:200])
-
-# Chunk a PDF (creates markdown chunks)
-atlas.chunk("/path/to/exploit_guide.pdf", domain="exploit")
-
-# Vectorize chunks into Pinecone
-atlas.vectorize(
-    "/path/to/chunks",
-    domain="technique",
-    tags=["authentication-bypass", "windows"],
-    namespace="cve",
-)
-
-# One-shot: chunk + vectorize
-atlas.ingest(
-    "/path/to/notes.md",
-    domain="ctf",
-    tags=["web", "insecure-deserialization"],
-)
-
-# Ask with sources (AI reasoning over your knowledge)
-answer, sources = atlas.ask("How do I exploit XXE in SOAP APIs?")
-print(answer)
-for source in sources:
-    print(f"Source: {source['chunk_id']} (score: {source['score']})")
-
-# Interactive chat (pick your backend)
-atlas.chat()                 # default: Gemini
+atlas.query("LFI", top_k=3)
+atlas.ask("What is LFI?")
+atlas.ask("What is LFI?", backend="gpt")
+atlas.ask("What is LFI?", backend="ollama")
+atlas.chat()
 atlas.chat(backend="gpt")
-atlas.chat(backend="ollama")
-
-# Push results to Telegram
-atlas.send(results)
-
-# Inspect what you've built
-stats = atlas.stats()
-print(f"Total vectors: {stats['total_vector_count']}")
-print(f"Namespaces: {list(stats['namespaces'].keys())}")
+atlas.fetch("technique::web::lfi::path-traversal::001")
+atlas.delete("chunk_id::here")
+atlas.vectorize("/path/to/chunk.md")
+atlas.stats()
+atlas.help()
 ```
 
-Tip: if you do not pass `namespace`, Atlas uses the default namespace automatically.
+Ask vs chat:
+- `atlas.ask()` returns one answer immediately.
+- `atlas.chat()` starts an interactive session where you keep asking multiple questions.
+- Default model for `atlas.ask()` is Gemini unless you pass `backend="gpt"` or `backend="ollama"`.
+
+Notes:
+- `atlas.chat()` is interactive; use `atlas.ask()` for a single answer.
+- If you do not pass `namespace`, Atlas uses the default namespace automatically.
+
+Vectorize from text (one shot):
+
+```python
+atlas.vectorize_text(
+    """
+# Injection Surface Checklist (Short)
+
+Use this to quickly map input points during recon.
+
+## Direct Inputs (GET/POST)
+* **GET**: `id`, `page`, `q`, `search`, `user`, `order`.
+* **POST**: `username`, `email`, `password`, `comment`, `message`.
+* **Path**: `/user/1234/profile` -> `1234` is often an internal ID.
+
+## APIs and Headers
+* **JSON**: `{ "id": 1, "filter": "..." }`
+* **GraphQL**: fields in `query` and `variables`
+* **Headers**: `Cookie`, `Authorization`, `Referer`, `X-Forwarded-For`
+
+## Response Signals
+* Content changes, time delays, HTTP 500 vs 200, stack traces
+""",
+    chunk_id="technique::web::recon::injection-surface-mapping::001",
+    path="default/web/recon/injection-surface-mapping_001.md",
+    domain="web",
+    tags=["pentesting", "hunting", "attack-surface", "burp-suite", "injection", "fuzzing", "bug-bounty"],
+    metadata={"chunk_type": "technique", "confidence": 5, "reuse_level": 2},
+)
+```
 
 ## Common Flags Reference
 
