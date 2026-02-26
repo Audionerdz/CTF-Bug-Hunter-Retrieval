@@ -114,3 +114,16 @@ Note: `atlas.chat()` is interactive; you do not need `print(answer)` there. For 
 ```python
 exit()
 ```
+
+## Send query results to Telegram
+
+```python
+from atlas_engine import Atlas
+atlas = Atlas()
+
+results = atlas.query("LFI", top_k=3)
+atlas.send(results)
+
+# Or send to a specific chat ID
+atlas.send(results, chat_id="your_chat_id")
+```

@@ -207,6 +207,16 @@ Use this to quickly map input points during recon.
 )
 ```
 
+Send query results to Telegram:
+
+```python
+results = atlas.query("LFI", top_k=3)
+atlas.send(results)
+
+# Or send to a specific chat ID
+atlas.send(results, chat_id="your_chat_id")
+```
+
 ## Common Flags Reference
 
 These flags work across most CLI scripts:
