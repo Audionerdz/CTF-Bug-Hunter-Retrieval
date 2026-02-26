@@ -50,6 +50,7 @@ Usage:
 
 import sys
 from pathlib import Path
+import yaml
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 import config
@@ -304,6 +305,58 @@ class RAG:
             metadata=metadata,
         )
 
+    def vectorize_text(
+        self,
+        text,
+        chunk_id,
+        path=None,
+        namespace=None,
+        domain=None,
+        tags=None,
+        metadata=None,
+    ):
+        """
+        Create a markdown chunk from raw text and vectorize it.
+
+        Args:
+            text: raw markdown content.
+            chunk_id: chunk ID to store in frontmatter.
+            path: output .md path (optional, defaults under CHUNKS_DIR).
+            namespace: namespace to vectorize into (optional).
+            domain: metadata domain to store in frontmatter.
+            tags: list of tags to store in frontmatter.
+            metadata: dict of extra metadata fields to store in frontmatter.
+        """
+        if not chunk_id:
+            raise ValueError("chunk_id is required")
+
+        if path:
+            target = Path(path)
+            if not target.is_absolute():
+                target = (config.RAG_ROOT / target).resolve()
+        else:
+            safe_name = chunk_id.replace("::", "_")
+            target = (config.CHUNKS_DIR / f"{safe_name}.md").resolve()
+
+        target.parent.mkdir(parents=True, exist_ok=True)
+
+        frontmatter = {"chunk_id": chunk_id}
+        if domain:
+            frontmatter["domain"] = domain
+        if tags:
+            frontmatter["tags"] = tags
+        if metadata:
+            for k, v in metadata.items():
+                if k not in frontmatter:
+                    frontmatter[k] = v
+
+        yaml_block = yaml.safe_dump(frontmatter, sort_keys=False, allow_unicode=True)
+        content = f"---\n{yaml_block}---\n\n{text.strip()}\n"
+        with open(target, "w", encoding="utf-8") as f:
+            f.write(content)
+
+        return self.vectorize(str(target), namespace=namespace)
+
     # ==================================================================
     # INGEST - r.ingest("file.pdf") = chunk + vectorize
     # ==================================================================
@@ -457,6 +510,7 @@ class RAG:
    atlas.fetch("chunk_id::here")              # fetch a chunk
    atlas.delete("chunk_id::here")             # delete a chunk
    atlas.vectorize("/path/file.md")           # vectorize chunks
+   atlas.vectorize_text("...", chunk_id="...") # create + vectorize
    atlas.stats()                                # index stats
    atlas.help()                                 # this reference
 

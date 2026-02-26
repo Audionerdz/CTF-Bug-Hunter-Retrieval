@@ -156,6 +156,7 @@
   "technique::web::path-traversal::path-max-phase3-4::001": "/home/kali/Desktop/RAG/default/web/path-traversal/path-max-root-access_001.md",
   "technique::web::path-traversal::path-max-phase5-6::001": "/home/kali/Desktop/RAG/default/web/path-traversal/path-max-ssh-persistence_001.md",
   "technique::web::recon::injection-surface-mapping::001": "/home/kali/Desktop/RAG/default/web/recon/injection-surface-mapping_001.md",
+  "technique::web::recon::injection-surface-mapping::sqli::001": "/home/kali/Desktop/RAG/default/web/recon/injection-surface-mapping_sqli_001.md",
   "technique::web::url-encoding::double-encoding::001": "/home/kali/Desktop/RAG/default/web/url-encoding/double-encoding_001.md",
   "technique::web::vulnerability-scanning::ssti::scanner::tinja-ssti::001": "/home/kali/Desktop/RAG/default/web/web-enumeration/tinja-ssti_001.md"
 }
