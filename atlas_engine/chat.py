@@ -3,12 +3,18 @@ Chat - Interactive RAG chat with multiple LLM backends.
 
 Backends:
     gemini   - Google Gemini 2.5 Flash (via LangChain)
-    gpt      - OpenAI GPT-4o-mini (direct API, fast + cheap)
-    ollama   - Ollama local/cloud models (e.g. gpt-oss:120b-cloud)
+    gpt      - OpenAI GPT-4o-mini (via LangChain ChatOpenAI)
+    groq     - Groq API (via LangChain ChatGroq)
+    ollama   - Ollama local/cloud models (via LangChain ChatOllama)
+
+All backends include:
+    - Context memory (k=3 sliding window via InMemoryChatMessageHistory)
+    - ChatML/ShareGPT JSONL export for fine-tuning (Unsloth-compatible)
 
 Usage:
     r.chat()                    # default: gemini
     r.chat("gpt")              # GPT-4o-mini
+    r.chat("groq")             # Groq API
     r.chat("ollama")           # Ollama local
 
     response, sources = r.ask("question")
@@ -17,27 +23,52 @@ Usage:
 
 import os
 import sys
+import json
+import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 import config
 
+from langchain_core.chat_history import InMemoryChatMessageHistory
+from langchain_core.messages import HumanMessage, AIMessage, trim_messages
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.output_parsers import StrOutputParser
+
 # Available backends
 BACKENDS = {
     "gemini": "gemini-2.5-flash",
     "gpt": "gpt-4o-mini",
+    "groq": "openai/gpt-oss-20b",
     "ollama": "gpt-oss:120b-cloud",
 }
 
 SYSTEM_PROMPT = (
-    "You are an expert in CTF and cybersecurity. "
-    "Answer questions based ONLY on the provided context. "
-    "If you don't have enough information, say so clearly."
+    "Identity: You are Atlas Engine, a high-efficiency technical intelligence system.\n"
+    "Mission: Provide precise, context-aware assistance by synthesizing information "
+    "from the provided RAG context and your internal knowledge.\n\n"
+    "OPERATIONAL PROTOCOLS:\n"
+    "1. CONTEXT FIRST: Prioritize the 'Context:' block for all answers. "
+    "If the information is missing, state so clearly and provide the best possible "
+    "solution based on general expertise.\n"
+    "2. NO VERBOSITY: Eliminate conversational fillers, politeness, and redundant "
+    "introductions. Go straight to the technical core.\n"
+    "3. STRUCTURE:\n"
+    "   - Use Markdown code blocks for scripts, commands, or configuration files.\n"
+    "   - Use bullet points for multi-step analysis or feature lists.\n"
+    "   - Keep paragraphs short and high-density.\n"
+    "4. CONTINUITY: Reference the provided conversation history to maintain logical "
+    "flow and avoid repeating previously established facts.\n"
+    "5. OBJECTIVE: Deliver maximum technical value per token."
 )
+
+# Memory window: 3 exchanges = 6 messages (human + ai pairs)
+MEMORY_K = 3
+MEMORY_WINDOW = MEMORY_K * 2
 
 
 class Chat:
-    """Interactive RAG chat with pluggable LLM backends."""
+    """Interactive RAG chat with pluggable LLM backends and context memory."""
 
     def __init__(
         self,
@@ -50,7 +81,7 @@ class Chat:
     ):
         """
         Args:
-            backend: "gemini", "gpt", or "ollama".
+            backend: "gemini", "gpt", "groq", or "ollama".
             model: override the default model for the backend.
             retriever_k: number of documents to retrieve.
             ollama_url: Ollama server URL (default: http://localhost:11434).
@@ -75,7 +106,17 @@ class Chat:
         self._pc_index = None
         self._retriever = None  # LangChain retriever (gemini only)
         self._chain = None  # LangChain chain (gemini only)
-        self._embeddings_client = None  # OpenAI client for embeddings (gpt/ollama)
+
+        # LangChain LLM instances
+        self._llm = None  # LangChain chat model (gpt/groq/ollama)
+
+        # Context memory (shared by all backends)
+        self._memory = InMemoryChatMessageHistory()
+        self._session_file = None  # ChatML JSONL path
+
+        # Semantic cache (initialized after backend init)
+        self.cache = None
+
         self._initialized = False
 
     # ==================================================================
@@ -90,10 +131,18 @@ class Chat:
             self._init_gemini()
         elif self.backend == "gpt":
             self._init_gpt()
+        elif self.backend == "groq":
+            self._init_groq()
         elif self.backend == "ollama":
             self._init_ollama()
         else:
             raise ValueError(f"Unknown backend: {self.backend}. Use: {list(BACKENDS)}")
+
+        # Initialize semantic cache (all backends)
+        if self._openai_client and self._pc_index:
+            from atlas_engine.cache import SemanticCache
+
+            self.cache = SemanticCache(self._openai_client, self._pc_index)
 
         self._initialized = True
 
@@ -123,9 +172,7 @@ class Chat:
         from langchain_google_genai import ChatGoogleGenerativeAI
         from langchain_pinecone import PineconeVectorStore
         from pinecone import Pinecone
-        from langchain_core.prompts import ChatPromptTemplate
         from langchain_core.runnables import RunnablePassthrough
-        from langchain_core.output_parsers import StrOutputParser
 
         embeddings = OpenAIEmbeddings(
             model=config.EMBEDDING_MODEL,
@@ -133,10 +180,14 @@ class Chat:
             openai_api_key=openai_key,
         )
 
-        llm = ChatGoogleGenerativeAI(model=self.model, google_api_key=google_key)
+        from openai import OpenAI
 
+        self._llm = ChatGoogleGenerativeAI(model=self.model, google_api_key=google_key)
+
+        self._openai_client = OpenAI(api_key=openai_key)
         pc = Pinecone(api_key=pinecone_key)
         index = pc.Index(self.index_name)
+        self._pc_index = index
 
         vectorstore = PineconeVectorStore(
             index=index,
@@ -152,6 +203,7 @@ class Chat:
         prompt = ChatPromptTemplate.from_messages(
             [
                 ("system", SYSTEM_PROMPT + "\n\nContexto:\n{context}"),
+                MessagesPlaceholder(variable_name="history"),
                 ("human", "{input}"),
             ]
         )
@@ -162,12 +214,13 @@ class Chat:
         self._chain = (
             {"context": self._retriever | format_docs, "input": RunnablePassthrough()}
             | prompt
-            | llm
+            | self._llm
             | StrOutputParser()
         )
 
     def _init_gpt(self):
-        """Initialize GPT-4o-mini (direct OpenAI API, no LangChain chain)."""
+        """Initialize GPT-4o-mini via LangChain with conversation memory."""
+        from langchain_openai import ChatOpenAI
         from openai import OpenAI
         from pinecone import Pinecone
 
@@ -177,10 +230,39 @@ class Chat:
         self._openai_client = OpenAI(api_key=openai_key)
         pc = Pinecone(api_key=pinecone_key)
         self._pc_index = pc.Index(self.index_name)
+
+        self._llm = ChatOpenAI(
+            model=self.model,
+            api_key=openai_key,
+            temperature=0.7,
+            max_tokens=500,
+        )
+
+    def _init_groq(self):
+        """Initialize Groq via LangChain ChatGroq with conversation memory."""
+        from langchain_groq import ChatGroq
+        from openai import OpenAI
+        from pinecone import Pinecone
+
+        openai_key = config.get_openai_key()
+        groq_key = config.get_groq_key()
+        pinecone_key = config.get_pinecone_key()
+
+        self._openai_client = OpenAI(api_key=openai_key)
+        pc = Pinecone(api_key=pinecone_key)
+        self._pc_index = pc.Index(self.index_name)
+
+        self._llm = ChatGroq(
+            model=self.model,
+            api_key=groq_key,
+            temperature=0.7,
+            max_tokens=500,
+        )
 
     def _init_ollama(self):
-        """Initialize Ollama (embeddings via OpenAI, LLM via Ollama API)."""
+        """Initialize Ollama via LangChain with conversation memory."""
         import requests
+        from langchain_community.chat_models import ChatOllama
         from openai import OpenAI
         from pinecone import Pinecone
 
@@ -190,6 +272,12 @@ class Chat:
         self._openai_client = OpenAI(api_key=openai_key)
         pc = Pinecone(api_key=pinecone_key)
         self._pc_index = pc.Index(self.index_name)
+
+        self._llm = ChatOllama(
+            model=self.model,
+            base_url=self.ollama_url,
+            temperature=0.7,
+        )
 
         # Check Ollama connectivity
         try:
@@ -207,7 +295,7 @@ class Chat:
             print(f"  Start with: ollama serve")
 
     # ==================================================================
-    # RETRIEVAL (shared by gpt/ollama backends)
+    # RETRIEVAL (shared by gpt/groq/ollama backends)
     # ==================================================================
 
     def _embed_query(self, text):
@@ -245,47 +333,85 @@ class Chat:
         return "\n\n---\n\n".join(f"[{d['chunk_id']}]\n{d['content']}" for d in docs)
 
     # ==================================================================
-    # LLM CALLS
+    # CONTEXT MEMORY
     # ==================================================================
 
-    def _call_gpt(self, context, query):
-        """Call GPT-4o-mini."""
-        response = self._openai_client.chat.completions.create(
-            model=self.model,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {
-                    "role": "user",
-                    "content": f"Context:\n{context}\n\nQuestion: {query}",
-                },
-            ],
-            temperature=0.7,
-            max_tokens=500,
+    def _get_history(self):
+        """Get last k exchanges from memory (sliding window)."""
+        return trim_messages(
+            self._memory.messages,
+            max_tokens=MEMORY_WINDOW,
+            token_counter=len,
+            strategy="last",
+            allow_partial=False,
         )
-        return response.choices[0].message.content.strip()
 
-    def _call_ollama(self, context, query):
-        """Call Ollama local/cloud model."""
-        import requests
+    def _save_to_memory(self, query, response):
+        """Save exchange to in-memory history."""
+        self._memory.add_message(HumanMessage(content=query))
+        self._memory.add_message(AIMessage(content=response))
 
-        prompt = f"Context:\n{context}\n\nQuestion: {query}\n\nAnswer:"
-        response = requests.post(
-            f"{self.ollama_url}/api/generate",
-            json={
-                "model": self.model,
-                "prompt": prompt,
-                "system": SYSTEM_PROMPT,
-                "stream": False,
-                "temperature": 0.7,
-            },
-            timeout=120,
-        )
-        if response.status_code == 200:
-            return response.json().get("response", "").strip()
-        else:
-            raise RuntimeError(
-                f"Ollama error ({response.status_code}): {response.text}"
+    def _save_turn(self, context, query, response, history):
+        """Append conversation turn to ChatML JSONL for fine-tuning."""
+        history_dir = config.RAG_ROOT / "chat_history"
+        history_dir.mkdir(exist_ok=True)
+
+        if not self._session_file:
+            ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            self._session_file = (
+                history_dir / f"session_{self.backend}_{ts}_chatml.jsonl"
             )
+
+        # Build ChatML/ShareGPT format
+        conversations = [{"from": "system", "value": SYSTEM_PROMPT}]
+        for msg in history:
+            role = "human" if msg.type == "human" else "gpt"
+            conversations.append({"from": role, "value": msg.content})
+        conversations.append(
+            {
+                "from": "human",
+                "value": f"Context:\n{context}\n\nQuestion: {query}",
+            }
+        )
+        conversations.append({"from": "gpt", "value": response})
+
+        entry = {"conversations": conversations}
+        with open(self._session_file, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+    # ==================================================================
+    # LLM CALLS (unified for gpt/groq/ollama via LangChain)
+    # ==================================================================
+
+    def _call_llm(self, context, query):
+        """Call LLM via LangChain with conversation memory (gpt/groq/ollama)."""
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", SYSTEM_PROMPT + "\n\nContext:\n{context}"),
+                MessagesPlaceholder(variable_name="history"),
+                ("human", "{input}"),
+            ]
+        )
+
+        chain = prompt | self._llm
+
+        # Get sliding window history (last k=3 exchanges)
+        history = self._get_history()
+
+        result = chain.invoke(
+            {
+                "context": context,
+                "history": history,
+                "input": query,
+            }
+        )
+        response = result.content.strip()
+
+        # Save to memory + ChatML JSONL
+        self._save_to_memory(query, response)
+        self._save_turn(context, query, response, history)
+
+        return response
 
     # ==================================================================
     # ASK (unified interface)
@@ -297,9 +423,9 @@ class Chat:
 
         Args:
             question: the question to ask.
-            namespace: namespace to search in (optional, uses instance default if not provided).
+            namespace: namespace to search in (optional, uses instance default).
 
-        Works with all backends.
+        Works with all backends. Memory persists across calls.
         """
         self._init()
 
@@ -309,9 +435,42 @@ class Chat:
             return self._ask_direct(question, namespace=namespace)
 
     def _ask_gemini(self, question):
-        """Ask via LangChain chain (Gemini)."""
+        """Ask via LangChain chain (Gemini) with memory + semantic cache."""
+        # Cache lookup
+        if self.cache:
+            cached = self.cache.lookup(question)
+            if cached:
+                response = cached["response"]
+                sources = cached["sources"].split(",") if cached["sources"] else []
+                self._save_to_memory(question, response)
+                print(f"  [CACHE HIT] score={cached['score']:.4f}")
+                return response, sources
+
         docs = self._retriever.invoke(question)
-        response = self._chain.invoke(question)
+        context = "\n\n".join(doc.page_content for doc in docs)
+        history = self._get_history()
+
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", SYSTEM_PROMPT + "\n\nContexto:\n{context}"),
+                MessagesPlaceholder(variable_name="history"),
+                ("human", "{input}"),
+            ]
+        )
+
+        chain = prompt | self._llm | StrOutputParser()
+
+        response = chain.invoke(
+            {
+                "context": context,
+                "history": history,
+                "input": question,
+            }
+        )
+
+        # Save to memory + ChatML
+        self._save_to_memory(question, response)
+        self._save_turn(context, question, response, history)
 
         sources = []
         for doc in docs:
@@ -322,10 +481,25 @@ class Chat:
                 or "unknown"
             )
             sources.append(source)
+
+        # Cache store
+        if self.cache:
+            self.cache.store(question, response, sources, self.backend)
+
         return response, sources
 
     def _ask_direct(self, question, namespace=None):
-        """Ask via direct API (GPT/Ollama)."""
+        """Ask via LangChain LLM (GPT/Groq/Ollama) with memory + semantic cache."""
+        # Cache lookup
+        if self.cache:
+            cached = self.cache.lookup(question)
+            if cached:
+                response = cached["response"]
+                sources = cached["sources"].split(",") if cached["sources"] else []
+                self._save_to_memory(question, response)
+                print(f"  [CACHE HIT] score={cached['score']:.4f}")
+                return response, sources
+
         embedding = self._embed_query(question)
         docs = self._search_pinecone(embedding, namespace=namespace)
 
@@ -333,13 +507,14 @@ class Chat:
             return "No relevant documents found.", []
 
         context = self._build_context(docs)
-
-        if self.backend == "gpt":
-            response = self._call_gpt(context, question)
-        else:
-            response = self._call_ollama(context, question)
+        response = self._call_llm(context, question)
 
         sources = [d["chunk_id"] for d in docs]
+
+        # Cache store
+        if self.cache:
+            self.cache.store(question, response, sources, self.backend)
+
         return response, sources
 
     # ==================================================================
@@ -351,8 +526,12 @@ class Chat:
         self._init()
 
         ns_display = self.namespace if self.namespace else "__default__"
+        cache_status = "ON" if self.cache else "OFF"
         print(f"\nRAG Chat ({self.backend}: {self.model})")
         print(f"Index: {self.index_name}:{ns_display} | Top-{self.retriever_k}")
+        print(
+            f"Memory: last {MEMORY_K} exchanges | Semantic Cache: {cache_status} | ChatML: ON"
+        )
         print("Type 'exit' to leave.\n")
 
         while True:
@@ -361,6 +540,10 @@ class Chat:
 
                 if query.lower() in ("exit", "quit", "salir", "q"):
                     print("Saliendo...")
+                    if self.cache:
+                        self.cache.stats()
+                    if self._session_file:
+                        print(f"Session saved: {self._session_file}")
                     break
 
                 if not query:
@@ -375,6 +558,8 @@ class Chat:
 
             except KeyboardInterrupt:
                 print("\n\nInterrumpido.")
+                if self._session_file:
+                    print(f"Session saved: {self._session_file}")
                 break
             except Exception as e:
                 print(f"\n[Error]: {e}")
@@ -386,4 +571,9 @@ class Chat:
     def __repr__(self):
         status = "ready" if self._initialized else "not initialized"
         ns_display = self.namespace if self.namespace else "__default__"
-        return f"Chat(backend={self.backend}, model={self.model}, index={self.index_name}:{ns_display}, k={self.retriever_k}, {status})"
+        mem_count = len(self._memory.messages) // 2
+        return (
+            f"Chat(backend={self.backend}, model={self.model}, "
+            f"index={self.index_name}:{ns_display}, k={self.retriever_k}, "
+            f"memory={mem_count}/{MEMORY_K}, {status})"
+        )

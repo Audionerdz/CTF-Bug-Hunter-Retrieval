@@ -110,6 +110,21 @@ def get_openai_key():
     return key
 
 
+def get_groq_key():
+    """Get Groq API key from any .env file in .env directory"""
+    # Try loading from openai.env first (common consolidation)
+    for env_file in ["openai.env", "pinecone.env", "gemini.env", "telegram.env"]:
+        env_vars = _load_env_file(env_file)
+        key = env_vars.get("GROQ_API_KEY")
+        if key:
+            return key
+
+    raise ValueError(
+        f"GROQ_API_KEY not found in {ENV_DIR}/*.env files\n"
+        f"Add GROQ_API_KEY=your_key to any .env file (e.g., openai.env)"
+    )
+
+
 def get_telegram_keys():
     """Get Telegram keys from .env/telegram.env"""
     env_vars = _load_env_file("telegram.env")

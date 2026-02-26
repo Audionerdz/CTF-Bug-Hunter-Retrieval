@@ -28,13 +28,15 @@ Usage:
     # Chunk + Vectorize in one shot
     r.ingest("/path/to/file.pdf")
 
-    # Chat (3 backends)
+    # Chat (4 backends)
     r.chat()                    # Gemini (default)
     r.chat("gpt")              # GPT-4o-mini
+    r.chat("groq")             # Groq API
     r.chat("ollama")           # Ollama local
 
     r.ask("How does LFI work?")
     r.ask("question", backend="gpt")
+    r.ask("question", backend="groq")
 
     # Telegram
     r.send("message text")
@@ -421,7 +423,7 @@ class RAG:
         Start interactive chat.
 
         Args:
-            backend: "gemini" (default), "gpt", or "ollama".
+            backend: "gemini" (default), "gpt", "groq", or "ollama".
         """
         if backend:
             self._chat_backend = backend.lower()
@@ -434,7 +436,7 @@ class RAG:
 
         Args:
             question: your question.
-            backend: "gemini", "gpt", or "ollama". None = current.
+            backend: "gemini", "gpt", "groq", or "ollama". None = current.
             namespace: namespace to search in (optional, uses instance default).
 
         Returns:
@@ -507,6 +509,7 @@ class RAG:
    atlas.ask("What is LFI?")                   # single answer
    atlas.chat()                                 # interactive chat (default backend)
    atlas.chat(backend="gpt")                   # switch backend
+   atlas.chat(backend="groq")                  # switch backend
    atlas.fetch("chunk_id::here")              # fetch a chunk
    atlas.delete("chunk_id::here")             # delete a chunk
    atlas.vectorize("/path/file.md")           # vectorize chunks

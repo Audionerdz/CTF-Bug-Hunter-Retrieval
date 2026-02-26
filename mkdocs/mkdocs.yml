@@ -27,6 +27,7 @@ nav:
   - Getting Started:
       - Installation: getting-started/installation.md
       - Beginner's Guide: getting-started/beginners-guide.md
+      - Groq, Memory & Cache: getting-started/groq-memory-cache.md
   - "Chapter 1: Atlas Fundamentals":
        - What is Atlas?: rag-fundamentals/what-is-rag.md
        - System Overview: rag-fundamentals/overview.md

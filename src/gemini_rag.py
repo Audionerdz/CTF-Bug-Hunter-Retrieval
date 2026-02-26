@@ -34,7 +34,7 @@ def main():
         elif args[i] in ("--help", "-h"):
             print("Usage: python3 gemini_rag.py [OPTIONS]")
             print("  --namespace <ns>  Namespace to search in")
-            print("  --backend <name>  gemini | gpt | ollama")
+            print("  --backend <name>  gemini | gpt | groq | ollama")
             print("  --model <name>    Override backend model")
             sys.exit(0)
         else:

@@ -47,6 +47,7 @@ mkdir -p .env
 echo "PINECONE_API_KEY=your_pinecone_key"     > .env/pinecone.env
 echo "OPENAI_API_KEY=your_openai_key"         > .env/openai.env
 echo "GOOGLE_API_KEY=your_gemini_key"         > .env/google.env
+echo "GROQ_API_KEY=your_groq_key"             > .env/groq.env
 echo "TELEGRAM_BOT_TOKEN=your_bot_token"      > .env/telegram.env
 ```
 
@@ -93,7 +94,7 @@ for source in answer['sources']:
     print(f"Source: {source['path']} (confidence: {source['score']})")
 
 # 💬 Interactive chat (pick your AI brain)
-atlas.chat(llm="gemini", namespace="technique")  # or "gpt" or "ollama"
+atlas.chat(llm="gemini", namespace="technique")  # or "gpt" or "groq" or "ollama"
 
 # 📱 Push results to Telegram
 atlas.send(results, chat_id="your_chat_id")
@@ -241,7 +242,7 @@ atlas-engine/
  │    ├── query.py              QueryEngine (Pinecone search)
  │    ├── vectorizer.py         Vectorizer (embed + metadata + upsert)
  │    ├── chunker.py            Chunker (PDF/text splitting)
- │    ├── chat.py               Chat (Gemini/GPT/Ollama backends)
+ │    ├── chat.py               Chat (Gemini/GPT/Groq/Ollama backends)
  │    ├── telegram.py           Telegram integration
  │    └── registry.py           Chunk registry manager
  │

@@ -9,6 +9,7 @@ langchain-community>=0.3.0
 langchain-openai>=0.2.0
 langchain-google-genai>=2.0.0
 langchain-pinecone>=0.1.0
+langchain-groq>=0.2.0
 
 # Vector Database
 pinecone-client>=3.0.0
@@ -16,6 +17,7 @@ pinecone-client>=3.0.0
 # LLM & Embedding Providers
 openai>=1.0.0
 google-generativeai>=0.8.0
+groq>=0.11.0
 
 # Messaging & Communication
 python-telegram-bot>=20.0
