@@ -15,6 +15,8 @@ def main():
     import sys
 
     namespace = None
+    backend = None
+    model = None
 
     # Parse optional arguments
     args = sys.argv[1:]
@@ -23,14 +25,22 @@ def main():
         if args[i] == "--namespace" and i + 1 < len(args):
             namespace = args[i + 1]
             i += 2
+        elif args[i] == "--backend" and i + 1 < len(args):
+            backend = args[i + 1]
+            i += 2
+        elif args[i] == "--model" and i + 1 < len(args):
+            model = args[i + 1]
+            i += 2
         elif args[i] in ("--help", "-h"):
             print("Usage: python3 gemini_rag.py [OPTIONS]")
             print("  --namespace <ns>  Namespace to search in")
+            print("  --backend <name>  gemini | gpt | ollama")
+            print("  --model <name>    Override backend model")
             sys.exit(0)
         else:
             i += 1
 
-    chat = Chat(namespace=namespace)
+    chat = Chat(backend=backend or "gemini", model=model, namespace=namespace)
     chat.interactive()
 
 
