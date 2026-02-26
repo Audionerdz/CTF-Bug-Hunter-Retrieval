@@ -111,6 +111,8 @@ This adds the following aliases to your shell:
 | `atlas-ask` | `atlas-ask "question"` | Ask with AI reasoning + sources |
 | `atlas-chat` | `atlas-chat --backend gpt` | Interactive chat with chosen backend |
 | `atlas-stt` | `atlas-stt query "text"` | Search & send to Telegram |
+| `atlas-stt` | `atlas-stt file /path` | Send file to Telegram |
+| `atlas-stt` | `atlas-stt dir /path` | Zip & send directory |
 | `atlas-send` | `atlas-send "message"` | Send message to Telegram |
 | `atlas-bot` | `atlas-bot` | Start Telegram bot daemon |
 | `atlas-sync` | `atlas-sync` | Sync chunk registry with filesystem |
