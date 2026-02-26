@@ -114,21 +114,17 @@ atlas.fetch("technique::web::lfi::path-traversal::001")
 atlas.stats()
 ```
 
-### Ask a question (AI-powered answer)
 
-Get an answer from your knowledge base using Gemini (default):
-
-```python
-answer, sources = atlas.ask("How does SQL injection work?")
-print(answer)  #Gemini Default 
-```
-
-Or use ChatGPT instead:
+### "I want to chat with my knowledge base"
 
 ```python
-answer, sources = atlas.ask("How does SQL injection work?", backend="gpt")
-print(answer)
+from atlas_engine import Atlas
+atlas = Atlas()
+atlas.chat()          # Gemini (default)
+atlas.chat("gpt")     # GPT-4o-mini
+atlas.chat("ollama")   # Ollama local
 ```
+
 
 #### Understanding Sources
 
