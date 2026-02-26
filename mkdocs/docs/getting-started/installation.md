@@ -151,25 +151,54 @@ Type `atlas.help()` to see all available commands.
 
 ## Python API (The Power User Way)
 
-Use the Python API when you want full control and fewer CLI steps:
-
 ```python
 from atlas_engine import Atlas
 
+# Initialize
 atlas = Atlas()
-atlas.query("LFI", top_k=3)
-atlas.ask("What is LFI?")  # default: Gemini
-atlas.ask("What is LFI?", backend="gpt")
-atlas.chat()               # interactive session
-atlas.vectorize("/path/to/chunk.md")
-atlas.vectorize_text(
-    """# My Chunk\n\nShort content here.""",
-    chunk_id="technique::web::recon::example::001",
-    path="default/web/recon/example_001.md",
-    domain="web",
-    tags=["pentesting"],
-    metadata={"chunk_type": "technique", "confidence": 3},
+
+# Search your knowledge base
+results = atlas.query("SQL injection in stored procedures")
+for chunk in results:
+    print(f"[{chunk['domain']}] {chunk['chunk_id']}")
+    print(chunk["content"][:200])
+
+# Chunk a PDF (creates markdown chunks)
+atlas.chunk("/path/to/exploit_guide.pdf", domain="exploit")
+
+# Vectorize chunks into Pinecone
+atlas.vectorize(
+    "/path/to/chunks",
+    domain="technique",
+    tags=["authentication-bypass", "windows"],
+    namespace="cve",
 )
+
+# One-shot: chunk + vectorize
+atlas.ingest(
+    "/path/to/notes.md",
+    domain="ctf",
+    tags=["web", "insecure-deserialization"],
+)
+
+# Ask with sources (AI reasoning over your knowledge)
+answer, sources = atlas.ask("How do I exploit XXE in SOAP APIs?")
+print(answer)
+for source in sources:
+    print(f"Source: {source['chunk_id']} (score: {source['score']})")
+
+# Interactive chat (pick your backend)
+atlas.chat()                 # default: Gemini
+atlas.chat(backend="gpt")
+atlas.chat(backend="ollama")
+
+# Push results to Telegram
+atlas.send(results)
+
+# Inspect what you've built
+stats = atlas.stats()
+print(f"Total vectors: {stats['total_vector_count']}")
+print(f"Namespaces: {list(stats['namespaces'].keys())}")
 ```
 
 Tip: if you do not pass `namespace`, Atlas uses the default namespace automatically.
