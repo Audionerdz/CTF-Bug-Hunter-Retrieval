@@ -99,6 +99,14 @@ atlas.chat(backend="gpt")   # OpenAI
 atlas.chat(backend="ollama") # local
 ```
 
+Use flags on the command (before the chat starts):
+
+```bash
+atlas-chat --backend gpt
+atlas-chat --backend gpt --model gpt-4o-mini
+atlas-chat --backend ollama --model llama3
+```
+
 Note: `atlas.chat()` is interactive; you do not need `print(answer)` there. For a single answer, use `atlas.ask()`.
 
 ## Exit
