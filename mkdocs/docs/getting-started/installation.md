@@ -106,14 +106,14 @@ This adds the following aliases to your shell:
 
 | Alias | Command | What It Does |
 |-------|---------|--------------|
-| `vectorize` | `vectorize /path/to/chunks` | Vectorize markdown chunks into Pinecone |
-| `query` | `query "your search text"` | Quick semantic search |
-| `rag-query` | `rag-query "text"` | Search + save + send to Telegram |
-| `GeminiRag` | `GeminiRag` | Interactive chat with Gemini |
-| `pa` | `pa "search text"` | Pinecone Assistant CLI |
-| `rag-send` | `rag-send "message"` | Send message to Telegram |
-| `rag-bot` | `rag-bot` | Start Telegram bot daemon |
-| `rag-sync` | `rag-sync` | Sync chunk registry with filesystem |
+| `atlas-vectorize` | `atlas-vectorize /path/to/chunks` | Vectorize markdown chunks into Pinecone |
+| `atlas-query` | `atlas-query "your search text"` | Quick semantic search |
+| `atlas-ask` | `atlas-ask "question"` | Ask with AI reasoning + sources |
+| `atlas-chat` | `atlas-chat --backend gpt` | Interactive chat with chosen backend |
+| `atlas-stt` | `atlas-stt query "text"` | Search & send to Telegram |
+| `atlas-send` | `atlas-send "message"` | Send message to Telegram |
+| `atlas-bot` | `atlas-bot` | Start Telegram bot daemon |
+| `atlas-sync` | `atlas-sync` | Sync chunk registry with filesystem |
 
 After running the script, reload your shell:
 
