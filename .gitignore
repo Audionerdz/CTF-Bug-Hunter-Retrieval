@@ -52,6 +52,16 @@ htmlcov/
 query_results/
 embeddings_cache/
 chunk_registry_backup.json
+artifacts/
+
+# Runtime session exports
+chat_history/
+
+# Default chunks: keep only public examples
+default/**
+!default/
+!default/examples/
+!default/examples/**
 
 # Pinecone/Vectorizer artifacts
 pinecone_vectors/

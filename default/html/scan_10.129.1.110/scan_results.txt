@@ -1,1 +1,0 @@
-# Nmap 7.98 scan initiated Sun Feb 22 00:22:18 2026 as: /usr/lib/nmap/nmap -sV -sC -p22,80,443,6661 -oN scan_10.129.1.110/scan_results.txt -oX scan_10.129.1.110/tcp.xml 10.129.1.110
