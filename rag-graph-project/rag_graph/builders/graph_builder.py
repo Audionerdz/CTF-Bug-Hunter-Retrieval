@@ -110,6 +110,7 @@ class GraphBuilder:
         # Knowledge domain nodes
         domains = [
             ("rag", "RAG & NLP", "Retrieval-Augmented Generation knowledge"),
+            ("langchain", "LangChain", "LangChain framework and abstractions"),
             ("python", "Python Programming", "Python programming concepts"),
             ("web_security", "Web Security", "Web application vulnerabilities"),
             ("linux_security", "Linux Security", "Linux exploitation techniques"),
@@ -217,6 +218,7 @@ class GraphBuilder:
             "windows": "windows_security",
             "networking": "networking",
             "rag": "rag",
+            "langchain": "langchain",
             "crypto": "cryptography",
             "reverse": "reverse_engineering",
         }
