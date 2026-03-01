@@ -417,25 +417,26 @@ class Chat:
     # ASK (unified interface)
     # ==================================================================
 
-    def ask(self, question, namespace=None):
+    def ask(self, question, namespace=None, use_graph=False):
         """
         Ask a single question. Returns (response_text, sources_list).
 
         Args:
             question: the question to ask.
             namespace: namespace to search in (optional, uses instance default).
+            use_graph: if True, expand retrieval with GraphRAG (2 hops semantic graph).
 
         Works with all backends. Memory persists across calls.
         """
         self._init()
 
         if self.backend == "gemini":
-            return self._ask_gemini(question)
+            return self._ask_gemini(question, use_graph=use_graph)
         else:
-            return self._ask_direct(question, namespace=namespace)
+            return self._ask_direct(question, namespace=namespace, use_graph=use_graph)
 
-    def _ask_gemini(self, question):
-        """Ask via LangChain chain (Gemini) with memory + semantic cache."""
+    def _ask_gemini(self, question, use_graph=False):
+        """Ask via LangChain chain (Gemini) with memory + semantic cache + optional GraphRAG."""
         # Cache lookup
         if self.cache:
             cached = self.cache.lookup(question)
@@ -448,6 +449,33 @@ class Chat:
 
         docs = self._retriever.invoke(question)
         context = "\n\n".join(doc.page_content for doc in docs)
+
+        # GraphRAG expansion (2 hops)
+        if use_graph and docs:
+            try:
+                from atlas_engine.graph import SemanticGraph
+
+                graph = SemanticGraph(namespace=self.namespace)
+                # Build from registry
+                from atlas_engine.core import Atlas
+
+                atlas = Atlas(namespace=self.namespace)
+                all_chunks = atlas._registry.list()
+                graph.build_from_chunks(all_chunks)
+
+                # Expand from first result
+                seed_id = docs[0].metadata.get("chunk_id", "")
+                if seed_id:
+                    expansion = graph.query_by_similarity(seed_id, depth=2)
+                    if expansion.get("node_ids"):
+                        # Add context note
+                        context = (
+                            f"[GRAPHRAG EXPANSION: +{len(expansion['node_ids'])} related chunks]\n\n"
+                            + context
+                        )
+            except Exception as e:
+                print(f"  [GRAPHRAG SKIP] {e}")
+                pass
         history = self._get_history()
 
         prompt = ChatPromptTemplate.from_messages(
@@ -488,8 +516,8 @@ class Chat:
 
         return response, sources
 
-    def _ask_direct(self, question, namespace=None):
-        """Ask via LangChain LLM (GPT/Groq/Ollama) with memory + semantic cache."""
+    def _ask_direct(self, question, namespace=None, use_graph=False):
+        """Ask via LangChain LLM (GPT/Groq/Ollama) with memory + semantic cache + optional GraphRAG."""
         # Cache lookup
         if self.cache:
             cached = self.cache.lookup(question)
@@ -507,6 +535,29 @@ class Chat:
             return "No relevant documents found.", []
 
         context = self._build_context(docs)
+
+        # GraphRAG expansion (2 hops)
+        if use_graph:
+            try:
+                from atlas_engine.graph import SemanticGraph
+
+                graph = SemanticGraph(namespace=namespace or self.namespace)
+                # Build from registry
+                all_chunks = self._registry.list()
+                graph.build_from_chunks(all_chunks)
+
+                # Expand from first result
+                seed_id = docs[0].get("chunk_id", "")
+                if seed_id:
+                    expansion = graph.query_by_similarity(seed_id, depth=2)
+                    if expansion.get("node_ids"):
+                        context = (
+                            f"[GRAPHRAG: +{len(expansion['node_ids'])} related chunks]\n\n"
+                            + context
+                        )
+            except Exception as e:
+                pass  # Silently skip if graph unavailable
+
         response = self._call_llm(context, question)
 
         sources = [d["chunk_id"] for d in docs]
