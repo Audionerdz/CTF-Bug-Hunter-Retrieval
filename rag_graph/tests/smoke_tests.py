@@ -15,6 +15,9 @@ import json
 from pathlib import Path
 from typing import Optional
 
+# Add parent directory to Python path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
 
 def test_graph_builder_basic():
     """Test basic graph building functionality"""
