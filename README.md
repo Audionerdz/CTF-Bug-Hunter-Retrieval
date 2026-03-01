@@ -15,13 +15,14 @@ Atlas Engine is a **production-grade RAG system** that turns chaotic knowledge i
 - **Metadata injection** at vectorize time—tag exploits, techniques, payloads without touching source files
 - **Sub-second query latency** powered by Pinecone's vector infrastructure
 - **No hallucinations on your team's knowledge**—sources are always cited, always traceable
+- **GraphRAG integration**—semantic graph visualization + deep retrieval across knowledge
 
 ### 🔥 **Everything Out of the Box**
 
 | Feature | Details |
 |---------|---------|
-| **7 Modular Components** | Query, Vectorize, Chunk, Chat, Telegram, Registry, Config—use individually or together |
-| **3 LLM Backends** | Gemini (free tier), GPT-4o-mini (cheap), Ollama (offline) |
+| **8 Modular Components** | Query, Vectorize, Chunk, Chat, Graph, Telegram, Registry, Config |
+| **4 LLM Backends** | Gemini (free), GPT-4o-mini (cheap), Groq (fast), Ollama (offline) |
 | **Granular Namespaces** | Separate your knowledge: `root`, `cve`, `technique`, `ctf`, `tools`, `payloads` |
 | **Live Metadata Injection** | Add domain, tags, custom fields at vectorize time—no frontmatter needed |
 | **PDF Intelligence** | RecursiveCharacterTextSplitter with configurable chunk boundaries |
@@ -50,32 +51,6 @@ echo "GOOGLE_API_KEY=your_gemini_key"         > .env/google.env
 echo "GROQ_API_KEY=your_groq_key"             > .env/groq.env
 echo "TELEGRAM_BOT_TOKEN=your_bot_token"      > .env/telegram.env
 ```
-
----
-
-## Docker (Recommended for CI/CD)
-
-Build locally:
-
-```bash
-docker build -t atlas-engine:local .
-```
-
-Run interactive chat (uses your local `.env/` and persists `chat_history/`):
-
-```bash
-docker compose up --build
-```
-
-Run one-off smoke command inside container:
-
-```bash
-docker run --rm atlas-engine:local -c "from atlas_engine import Atlas; Atlas(); print('ok')"
-```
-
-Notes:
-- The image includes `default/`, `src/`, `atlas_engine/`, and `config.py`.
-- API keys are injected at runtime via mounted `.env/` files.
 
 ---
 
@@ -120,7 +95,7 @@ for source in answer['sources']:
     print(f"Source: {source['path']} (confidence: {source['score']})")
 
 # 💬 Interactive chat (pick your AI brain)
-atlas.chat(llm="gemini", namespace="technique")  # or "gpt" or "groq" or "ollama"
+atlas.chat(llm="gemini", namespace="technique")  # or "gpt", "groq", or "ollama"
 
 # 📱 Push results to Telegram
 atlas.send(results, chat_id="your_chat_id")
@@ -129,6 +104,11 @@ atlas.send(results, chat_id="your_chat_id")
 stats = atlas.stats()
 print(f"Total chunks: {stats['total_vectors']}")
 print(f"Active namespaces: {stats['namespaces']}")
+
+# 🕸️ GraphRAG: Build semantic graph and query
+graph = atlas.build_graph(namespace="ctf")
+graph.query_by_similarity("RCE", depth=2)  # Expand 2 hops
+html = graph.export_html("ctf_knowledge_graph.html")
 ```
 
 ### CLI (The Lazy Way)
@@ -158,6 +138,10 @@ atlas-send "Quick question: how do I exploit LDAP?"
 atlas-stt query "XXE bypass techniques"
 atlas-stt file /path/to/wordlist.txt
 atlas-stt dir /path/to/tools/
+
+# GraphRAG: Build and visualize
+atlas-graph build --namespace ctf
+atlas-graph plot ctf_knowledge_graph.html
 ```
 
 ---
@@ -166,17 +150,18 @@ atlas-stt dir /path/to/tools/
 
 ```
 Atlas()
- ├─ .query(text, k=5, namespace="root")     Semantic search + ranking
- ├─ .fetch(chunk_id)                         Retrieve by ID
- ├─ .chunk(file_path, chunk_size=1000)      Split documents into atoms
- ├─ .vectorize(dir, domain, tags, namespace) Embed + upload to Pinecone
- ├─ .ingest(file_path, domain, tags)         Chunk + vectorize (one-shot)
- ├─ .ask(question, llm="gemini")            Reasoning + sources
- ├─ .chat(llm="gpt", namespace="root")      Interactive multi-turn
- ├─ .send(results, chat_id)                  Telegram delivery
- ├─ .stats()                                 Index analytics
- ├─ .sync()                                  Rebuild chunk registry
- └─ .help()                                  Full command reference
+ ├─ .query(text, k=5, namespace="root")       Semantic search + ranking
+ ├─ .fetch(chunk_id)                          Retrieve by ID
+ ├─ .chunk(file_path, chunk_size=1000)        Split documents into atoms
+ ├─ .vectorize(dir, domain, tags, namespace)  Embed + upload to Pinecone
+ ├─ .ingest(file_path, domain, tags)          Chunk + vectorize (one-shot)
+ ├─ .ask(question, llm="gemini")              Reasoning + sources
+ ├─ .chat(llm="gpt", namespace="root")        Interactive multi-turn
+ ├─ .build_graph(namespace="root")            Build semantic graph (NetworkX)
+ ├─ .send(results, chat_id)                   Telegram delivery
+ ├─ .stats()                                  Index analytics
+ ├─ .sync()                                   Rebuild chunk registry
+ └─ .help()                                   Full command reference
 ```
 
 ---
@@ -240,21 +225,10 @@ for chunk in results:
 
 ## Documentation (Read the Full Arsenal)
 
-- **[Getting Started](mkdocs/docs/getting-started/installation.md)** — Clone, install, configure
-- **[Beginner's Guide](mkdocs/docs/getting-started/beginners-guide.md)** — First queries, chunking, vectorization
-- **[What is RAG?](mkdocs/docs/rag-fundamentals/what-is-rag.md)** — The philosophy behind Atlas
-- **[Chunking Methodology](mkdocs/docs/chunking-methodology/core-principles.md)** — How to structure your knowledge
-- **[Pinecone CLI](mkdocs/docs/pinecone-operations/cli-essentials.md)** — Vector database operations
-- **[Telegram Integration](mkdocs/docs/telegram-integration/stt-reference.md)** — Push intelligence to your team
-- **[PDF Chunker](mkdocs/docs/pdf-chunker/usage.md)** — Extract knowledge from documents
-
-Build docs locally:
-
-```bash
-pip install mkdocs-material
-cd mkdocs && mkdocs serve
-# Visit http://localhost:8000
-```
+- **[Getting Started](docs/guides/GITHUB_ACTIONS_QUICKSTART.md)** — Clone, install, configure (5 min)
+- **[GitHub Actions Setup](docs/guides/GITHUB_ACTIONS_README.md)** — Full CI/CD automation
+- **[Docker Deployment](docs/deployment/DOCKER_TO_HOME_LAB.md)** — Deploy to your home lab or VPS
+- **[Troubleshooting](docs/troubleshooting/COMMON_ISSUES.md)** — Common fixes and solutions
 
 ---
 
@@ -262,13 +236,14 @@ cd mkdocs && mkdocs serve
 
 ```
 atlas-engine/
- ├── atlas_engine/              ← Framework core (7 components)
+ ├── atlas_engine/              ← Framework core (8 components)
  │    ├── __init__.py           Exports: from atlas_engine import Atlas
  │    ├── core.py               Atlas() orchestrator (full API)
  │    ├── query.py              QueryEngine (Pinecone search)
  │    ├── vectorizer.py         Vectorizer (embed + metadata + upsert)
  │    ├── chunker.py            Chunker (PDF/text splitting)
  │    ├── chat.py               Chat (Gemini/GPT/Groq/Ollama backends)
+ │    ├── graph.py              GraphRAG (NetworkX + PyVis)
  │    ├── telegram.py           Telegram integration
  │    └── registry.py           Chunk registry manager
  │
@@ -277,19 +252,31 @@ atlas-engine/
  │    ├── vectorize.py
  │    ├── ask.py
  │    ├── chat.py
- │    └── ... (10 more aliases)
+ │    ├── ci_integration.py
+ │    └── ... (9 more aliases)
  │
  ├── config.py                  Centralized config (keys, paths, presets)
  ├── .env/                      API keys (never committed)
- ├── default/                   Knowledge base (294+ chunks)
+ ├── default/                   Knowledge base (296+ chunks + examples)
  ├── chunk_registry.json        Chunk metadata index
  ├── requirements.txt           Dependencies
  ├── setup_aliases.sh           CLI alias installer
  │
- ├── mkdocs/                    Documentation site
+ ├── docs/                      Documentation (editorial)
+ │    ├── INDEX.md              Navigation hub
+ │    ├── guides/               Setup guides + Windows setup
+ │    ├── deployment/           Docker & home lab guides
+ │    └── troubleshooting/      Common issues + fixes
+ │
+ ├── mkdocs/                    Documentation site (web)
  │    ├── mkdocs.yml
  │    └── docs/
  │
+ ├── .github/
+ │    └── workflows/
+ │        └── docker-ci.yml     GitHub Actions CI/CD (Docker + test + GraphRAG)
+ │
+ ├── artifacts/                 Build outputs (tar.gz, exports)
  ├── LICENSE                    MIT
  ├── CONTRIBUTING.md            How to contribute
  └── CODE_OF_CONDUCT.md        Community standards
@@ -306,9 +293,10 @@ atlas-engine/
 | **Hallucinations from LLMs** | Sources always cited, always traceable |
 | **No context isolation** | Namespaces keep different domains separate |
 | **Manual metadata tagging** | Inject metadata at vectorize time, not in files |
-| **Single LLM vendor lock-in** | Pick Gemini (free), GPT (cheap), or Ollama (offline) |
+| **Single LLM vendor lock-in** | Pick Gemini (free), GPT (cheap), Groq (fast), or Ollama (offline) |
 | **No team collaboration** | Telegram bridge—push intelligence to your team |
 | **Complex RAG pipelines** | One line: `atlas.ingest("/path")` |
+| **No visual knowledge maps** | GraphRAG—semantic graph with interactive HTML |
 
 ---
 
@@ -319,8 +307,10 @@ atlas-engine/
 - **At least one LLM API key:**
   - Google Gemini (free tier available)
   - OpenAI (GPT-4o-mini, cheap)
+  - Groq (free, fast)
   - Ollama (offline, free)
 - **Optional:** Telegram bot token for team delivery
+- **Optional:** Docker + Docker Compose for containerized deployment
 
 ---
 
@@ -334,6 +324,8 @@ On a 500-chunk knowledge base (~2M tokens):
 | Single Q&A | **2.1s** | Gemini reasoning + sources |
 | Chat turn | **3.5s** | Multi-turn with context |
 | Vectorize 100 chunks | **1.8s** | Batch embed + upsert |
+| Build graph (500 nodes) | **850ms** | NetworkX construction |
+| Export graph HTML | **120ms** | PyVis rendering |
 
 ---
 
@@ -342,17 +334,10 @@ On a 500-chunk knowledge base (~2M tokens):
 - [ ] Batch knowledge export (YAML/JSON)
 - [ ] Vector database switching (Weaviate, Milvus support)
 - [ ] Advanced retrieval (Hybrid BM25 + semantic)
+- [ ] GraphRAG expansion (2-3 hop traversal + context aggregation)
 - [ ] Fine-tuning data generation from chunks
 - [ ] Web UI dashboard for index management
 - [ ] Slack integration alongside Telegram
-
----
-
-## GitHub Actions Automation
-
-This repo includes `.github/workflows/docker-ci.yml` with:
-- `build-and-smoke-test` on every PR/push (builds Docker image + runs container smoke test).
-- `publish-ghcr` on `main` pushes (publishes image to `ghcr.io/<owner>/<repo>:latest` and `:sha`).
 
 ---
 
@@ -372,7 +357,7 @@ MIT — Use freely, modify, distribute. Respect the license, respect the communi
 
 ## Support
 
-- 📖 **Docs**: Read `mkdocs/docs/`
+- 📖 **Docs**: Read `docs/` and `mkdocs/docs/`
 - 🐛 **Bugs**: Open an issue on GitHub
 - 💬 **Questions**: Discussions tab
 - 🚀 **Suggestions**: Feature requests welcome

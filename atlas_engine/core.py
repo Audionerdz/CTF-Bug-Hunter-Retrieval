@@ -478,6 +478,38 @@ class RAG:
         self._registry.info()
         return self._registry.list()
 
+    def build_graph(self, namespace: str = None, max_chunks: int = None):
+        """
+        Build a semantic knowledge graph from chunks in the given namespace.
+        Returns SemanticGraph instance.
+
+        Usage:
+            graph = atlas.build_graph(namespace="ctf")
+            subgraph = graph.query_by_similarity("chunk_id::001", depth=2)
+            html_path = graph.export_html("knowledge_graph.html")
+        """
+        try:
+            from atlas_engine.graph import SemanticGraph
+        except ImportError as e:
+            print(f"GraphRAG module not available: {e}")
+            return None
+
+        ns = namespace or self.namespace
+        chunks = self._registry.list()
+        chunks_in_ns = [c for c in chunks if c.get("namespace", "root") == ns]
+
+        if max_chunks:
+            chunks_in_ns = chunks_in_ns[:max_chunks]
+
+        if not chunks_in_ns:
+            print(f"No chunks found in namespace: {ns}")
+            return None
+
+        graph = SemanticGraph(namespace=ns)
+        graph.build_from_chunks(chunks_in_ns, embeddings=None)
+        print(f"Built graph: {graph.stats()}")
+        return graph
+
     def save(self, results, query):
         """Save query results as markdown file."""
         return self.query_engine.save_markdown(results, query)

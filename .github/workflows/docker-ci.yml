@@ -33,6 +33,10 @@ jobs:
         run: |
           docker run --rm atlas-engine:ci -c "from atlas_engine import Atlas; Atlas(); print('smoke-ok')"
 
+      - name: GraphRAG smoke test
+        run: |
+          docker run --rm atlas-engine:ci -c "from atlas_engine.graph import SemanticGraph; g = SemanticGraph(); print('graph-ok')"
+
       - name: Prepare CI env files
         if: ${{ secrets.OPENAI_API_KEY != '' && secrets.PINECONE_API_KEY != '' }}
         env:
