@@ -614,6 +614,33 @@ Then go to Actions > Docker CI > Run workflow button.
 
 ---
 
+## GraphRAG in CI/CD
+
+GitHub Actions now includes **GraphRAG smoke tests** to verify semantic graph functionality automatically:
+
+**What runs on every push:**
+```yaml
+- name: GraphRAG smoke test
+  run: |
+    docker run --rm atlas-engine:ci -c \
+      "from atlas_engine.graph import SemanticGraph; \
+       g = SemanticGraph(); print('✓ GraphRAG initialized')"
+```
+
+**No extra setup.** The graph test validates:
+- ✅ GraphRAG module loads without errors
+- ✅ SemanticGraph class instantiates properly
+- ✅ NetworkX + PyVis dependencies available
+
+To use GraphRAG locally:
+```bash
+python3 -c "from atlas_engine import Atlas; \
+  graph = Atlas().build_graph(namespace='ctf'); \
+  graph.export_html('graph.html')"
+```
+
+---
+
 ## Summary
 
 **You now know:**
@@ -622,9 +649,10 @@ Then go to Actions > Docker CI > Run workflow button.
 ✅ How to add API keys securely (GitHub Secrets)
 ✅ How to run tests from GitHub web (Actions tab)
 ✅ How to run tests locally first (Docker)
-✅ What each test does (build, smoke, integration, publish)
+✅ What each test does (build, smoke, integration, publish, **graph validation**)
 ✅ How to troubleshoot failures (common issues)
 ✅ How to keep your app safe (isolated namespaces, auto-cleanup)
+✅ How GraphRAG integrates into your CI/CD pipeline
 
 **Next time you make changes:**
 
