@@ -58,10 +58,10 @@ artifacts/
 chat_history/
 
 # Default chunks: keep only public examples
-default/**
-!default/
-!default/examples/
-!default/examples/**
+#default/**
+#!default/
+#!default/examples/
+#!default/examples/**
 
 # Pinecone/Vectorizer artifacts
 pinecone_vectors/
@@ -72,3 +72,11 @@ node_modules/
 
 # Bot packages (already integrated into rag/)
 *.zip
+
+# RAG-Graph exports and generated files
+graph_exports/
+rag_graph/**/*.json
+rag_graph/**/*.graphml
+rag_graph/.pytest_cache/
+rag_graph/.coverage
+REPOSITORY_ANALYSIS.md

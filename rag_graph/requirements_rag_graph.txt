@@ -1,0 +1,29 @@
+# RAG-Graph Dependencies
+# Isolated from main RAG requirements
+
+# Core dependencies
+PyYAML>=6.0
+python-dotenv>=1.0.0
+
+# Graph processing
+networkx>=3.0
+pyyaml>=6.0
+
+# API & Web
+fastapi>=0.100.0
+uvicorn>=0.23.0
+pydantic>=2.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Development
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0
+
+# Optional: Graph visualization and export
+# graphviz>=0.20.0  # For DOT format export
+# plotly>=5.0.0     # For interactive visualization
+# neo4j>=5.0.0      # For Neo4j integration (optional)

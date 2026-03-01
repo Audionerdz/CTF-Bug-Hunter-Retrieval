@@ -1,0 +1,37 @@
+# RAG-Graph specific
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# Graph exports
+graph_exports/
+*.json
+*.graphml
+
+# Temporary files
+*.tmp
+.DS_Store

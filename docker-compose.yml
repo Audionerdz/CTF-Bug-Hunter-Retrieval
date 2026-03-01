@@ -12,3 +12,30 @@ services:
       - ./chat_history:/app/chat_history
       - ./.env:/app/.env:ro
     command: ["src/gemini_rag.py", "--backend", "gemini"]
+    networks:
+      - rag-network
+
+  rag-graph:
+    build:
+      context: .
+      dockerfile: rag_graph/Dockerfile.rag-graph
+    image: rag-graph:local
+    container_name: rag-graph-api
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./default:/app/default:ro
+      - ./rag_graph:/app/rag_graph
+    environment:
+      - RAG_GRAPH_PORT=8001
+      - RAG_GRAPH_HOST=0.0.0.0
+      - PYTHONUNBUFFERED=1
+    command: ["python", "-m", "rag_graph.api.server"]
+    depends_on:
+      - atlas
+    networks:
+      - rag-network
+
+networks:
+  rag-network:
+    driver: bridge
