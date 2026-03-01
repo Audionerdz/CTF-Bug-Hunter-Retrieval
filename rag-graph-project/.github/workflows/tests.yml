@@ -1,0 +1,105 @@
+name: RAG-Graph Tests
+
+on:
+  push:
+    branches: [ main, rag-graph ]
+    paths:
+      - 'rag-graph-project/**'
+      - '.github/workflows/tests.yml'
+  pull_request:
+    branches: [ main, rag-graph ]
+    paths:
+      - 'rag-graph-project/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r rag-graph-project/rag_graph/requirements_rag_graph.txt
+
+    - name: Run smoke tests
+      run: |
+        cd rag-graph-project
+        python rag_graph/tests/smoke_tests.py
+
+    - name: Run unit tests
+      run: |
+        cd rag-graph-project
+        pytest rag_graph/tests/test_models.py -v
+
+    - name: Run integration tests
+      run: |
+        cd rag-graph-project
+        pytest rag_graph/tests/test_graph_builder.py -v
+
+    - name: Generate coverage report
+      run: |
+        cd rag-graph-project
+        pytest rag_graph/tests/ --cov=rag_graph --cov-report=xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./rag-graph-project/coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 black mypy
+
+    - name: Lint with flake8
+      run: |
+        flake8 rag-graph-project/rag_graph --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 rag-graph-project/rag_graph --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Format check with black
+      run: |
+        black --check rag-graph-project/rag_graph
+
+    - name: Type checking with mypy
+      run: |
+        mypy rag-graph-project/rag_graph --ignore-missing-imports || true
+
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: ./rag-graph-project/rag_graph/Dockerfile.rag-graph
+        push: false
+        tags: rag-graph:test
