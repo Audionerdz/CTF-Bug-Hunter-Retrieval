@@ -193,3 +193,21 @@ cat /home/kali/Desktop/RAG/.env/telegram.env
 ```
 
 Get your bot token from [@BotFather](https://t.me/BotFather) on Telegram. Get your chat ID by messaging [@userinfobot](https://t.me/userinfobot).
+
+## Quick Activation (After Adding Keys to .env)
+
+Once you have your `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `.env/telegram.env`, activate the bot:
+
+**Option 1: Start CLI mode (one-shot)**
+```bash
+stt message "Bot is active!"
+```
+
+**Option 2: Start daemon bot (always listening)**
+```bash
+rag-bot
+# Or directly:
+python3 -c "from atlas_engine import Atlas; Atlas().start_bot()"
+```
+
+That's it! The bot is now listening for messages on Telegram.
