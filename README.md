@@ -166,6 +166,88 @@ Atlas()
 
 ---
 
+## GraphRAG: Semantic Knowledge Graphs
+
+Atlas builds **semantic knowledge graphs** that connect chunks based on similarity, shared tags, domain relationships, and metadata. This enables **2-hop expansion retrieval**—finding not just direct matches, but also related concepts your AI hasn't seen yet.
+
+### How It Works
+
+```
+Chunk A (SQLi in PHP)
+       │ (semantic similarity 0.85)
+       └──→ Chunk B (Blind SQLi detection)
+            │ (tag overlap: "sqli", "php")
+            └──→ Chunk C (Database enumeration techniques)
+                 │ (domain: technique ← technique)
+                 └──→ Chunk D (MySQL-specific payloads)
+```
+
+When you query "SQL injection bypass", Atlas retrieves Chunk A + its neighbors, giving your LLM **richer context** and more **citation sources**.
+
+### Building Graphs
+
+**Python API:**
+```python
+from atlas_engine import Atlas
+
+atlas = Atlas()
+
+# Build graph from registry (lazy-loaded)
+graph = atlas.build_graph(namespace="ctf")
+
+# Export to interactive HTML
+graph.export_html("ctf_knowledge.html")
+
+# Get statistics
+stats = graph.stats()
+print(f"Nodes: {stats['nodes']}, Edges: {stats['edges']}")
+
+# Query with graph expansion
+answer = atlas.ask(
+    "How do I bypass input validation in web forms?",
+    use_graph=True  # Expands 2 hops in the graph
+)
+```
+
+**CLI:**
+```bash
+# Build graph for a namespace
+atlas-graph build --namespace ctf --output ctf_graph.html
+
+# Show statistics
+atlas-graph stats --namespace ctf
+
+# Open in browser
+atlas-graph plot ctf_graph.html
+```
+
+### Domain Relationships
+
+Graphs automatically connect **related domains**:
+
+| Domain 1 | Domain 2 | Connected? |
+|----------|----------|-----------|
+| `python` | `python-programming` | ✅ Yes |
+| `rag` | `retrieval` | ✅ Yes |
+| `network` | `networking` | ✅ Yes |
+| `web` | `web_security` | ❌ No (separate knowledge silos) |
+
+This prevents **semantic pollution**—web exploitation techniques stay separate from general web knowledge.
+
+### Edge Types
+
+The graph builds edges based on:
+
+| Type | Weight | Example |
+|------|--------|---------|
+| **semantic** | 0.7–1.0 | Embedding similarity > 0.7 |
+| **tag_overlap** | 0.5 | Chunks share tags (e.g., "sqli", "cve") |
+| **domain_affinity** | 0.3 | Same domain (e.g., both `web`) |
+| **domain_related** | 0.5 | Related domains (e.g., `python` + `python-programming`) |
+| **rag_cluster** | 0.8 | All RAG-related chunks interconnected |
+
+---
+
 ## Namespace Strategy: Organize Like a Pro
 
 Keep your knowledge **separated by context**, not mixed together:
