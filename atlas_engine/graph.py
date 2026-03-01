@@ -165,6 +165,13 @@ class SemanticGraph:
                 if chunk.get(vuln, {}).get("present"):
                     vuln_types.append(vuln)
 
+            # Detect RAG-related and LangChain-related chunks for special handling
+            domain = chunk.get("domain", "unknown").lower()
+            is_rag_topic = (
+                "rag" in domain or "retrieval" in domain or "augment" in domain
+            )
+            is_langchain_topic = "langchain" in domain or "lc" in domain
+
             node = GraphNode(
                 chunk_id=chunk_id,
                 domain=chunk.get("domain", "unknown"),
@@ -180,6 +187,16 @@ class SemanticGraph:
 
         # Add edges based on similarity, tags, domain
         chunk_ids = [c.get("chunk_id") for c in chunks if c.get("chunk_id")]
+
+        # Track RAG and LangChain nodes for cluster edges
+        rag_nodes = []
+        langchain_nodes = []
+        for i, cid in enumerate(chunk_ids):
+            domain = chunks[i].get("domain", "").lower()
+            if "rag" in domain or "retrieval" in domain or "augment" in domain:
+                rag_nodes.append(cid)
+            if "langchain" in domain or "lc" in domain:
+                langchain_nodes.append(cid)
 
         for i, id_a in enumerate(chunk_ids):
             for id_b in chunk_ids[i + 1 :]:
@@ -205,6 +222,16 @@ class SemanticGraph:
                 # Domain affinity
                 if self.nodes[id_a].domain == self.nodes[id_b].domain:
                     self.add_domain_edge(id_a, id_b)
+
+                # RAG cluster edges (all RAG topics interconnected)
+                if id_a in rag_nodes and id_b in rag_nodes:
+                    self.graph.add_edge(id_a, id_b, weight=0.8, edge_type="rag_cluster")
+
+                # LangChain cluster edges (all LangChain topics interconnected)
+                if id_a in langchain_nodes and id_b in langchain_nodes:
+                    self.graph.add_edge(
+                        id_a, id_b, weight=0.8, edge_type="langchain_cluster"
+                    )
 
     def query_by_similarity(self, seed_chunk_id: str, depth: int = 1) -> Dict[str, any]:
         """
