@@ -210,8 +210,18 @@ atlas-bot
 
 The bot will start polling. Send `/start` to your bot on Telegram to activate.
 
-**Or send a one-shot message/query:**
+**Or use one-shot commands:**
+
 ```bash
-atlas-stt "your query"
-atlas-send "message text"
+# Send plain text message
+atlas-send "Hello from Atlas!"
+
+# Send file
+atlas-send /path/to/report.md
+
+# Send directory (zipped)
+atlas-send /path/to/loot
+
+# Search RAG and send results
+atlas-stt "LFI exploitation" 10
 ```
