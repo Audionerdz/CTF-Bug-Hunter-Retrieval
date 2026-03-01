@@ -35,6 +35,7 @@ alias atlas-stt='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/rag_to_telegram.py'"'"'
 alias atlas-send='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/telegram_sender.py'"'"'
 alias atlas-bot='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/telegram_bot.py'"'"'
 alias atlas-sync='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/sync_registry.py'"'"'
+alias atlas-graph='"'"''"$PYTHON"' '"$SCRIPT_DIR"'/src/graph_cli.py'"'"'
 '
 
 # Detect shell
@@ -99,6 +100,9 @@ echo "   atlas-stt dir /path                - Zip & send directory"
 echo "   atlas-send \"message\"              - Send to Telegram"
 echo "   atlas-bot                          - Start Telegram bot"
 echo "   atlas-sync                         - Rebuild chunk registry"
+echo "   atlas-graph build [--namespace NS] [--output FILE.html] - Build knowledge graph"
+echo "   atlas-graph plot FILE.html         - Open graph in browser"
+echo "   atlas-graph stats [--namespace NS] - Show graph statistics"
 echo
 echo "✅ Setup complete! Atlas Engine is ready to hunt."
 echo
