@@ -1,6 +1,6 @@
 # ⚡ Atlas Engine
 
-> **The most ruthless Retrieval-Augmented Generation framework ever built.** Purpose-engineered for offensive security, CTF hunters, threat researchers, and teams that refuse to compromise on intelligence speed or accuracy.
+
 
 Atlas Engine is a **production-grade RAG system** that turns chaotic knowledge into structured, searchable intelligence. Feed it PDFs, markdown, exploits, techniques, payloads—Atlas atomizes it into vectors, learns the structure, and returns answers faster than your competition.
 
@@ -131,8 +131,8 @@ atlas-chat --llm gemini
 # Ask and get sources
 atlas-ask "What is Server-Side Template Injection?"
 
-# Send to Telegram
-atlas-send "Quick question: how do I exploit LDAP?"
+# Send text to Telegram
+atlas-send "Hi!"
 
 # STT pipeline: search → send to Telegram
 atlas-stt query "XXE bypass techniques"
