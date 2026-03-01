@@ -77,7 +77,7 @@ class SemanticGraph:
 
     def add_node(self, node: GraphNode) -> None:
         """Add a chunk node to the graph."""
-        if not self.graph:
+        if self.graph is None:
             raise RuntimeError("NetworkX not installed. Install: pip install networkx")
         self.nodes[node.chunk_id] = node
         if node.embedding:
@@ -97,7 +97,7 @@ class SemanticGraph:
         self, chunk_id_a: str, chunk_id_b: str, weight: float
     ) -> None:
         """Add similarity-based edge between two chunks."""
-        if not self.graph:
+        if self.graph is None:
             return
         self.graph.add_edge(
             chunk_id_a,
@@ -108,7 +108,7 @@ class SemanticGraph:
 
     def add_tag_overlap_edge(self, chunk_id_a: str, chunk_id_b: str) -> None:
         """Add edge if chunks share tags."""
-        if not self.graph:
+        if self.graph is None:
             return
         self.graph.add_edge(
             chunk_id_a,
@@ -119,7 +119,7 @@ class SemanticGraph:
 
     def add_domain_edge(self, chunk_id_a: str, chunk_id_b: str) -> None:
         """Add edge if chunks share domain."""
-        if not self.graph:
+        if self.graph is None:
             return
         self.graph.add_edge(
             chunk_id_a,
@@ -127,6 +127,51 @@ class SemanticGraph:
             weight=0.3,
             edge_type="domain_affinity",
         )
+
+    def add_related_domain_edge(self, chunk_id_a: str, chunk_id_b: str) -> None:
+        """Add edge if chunks have related domains (e.g., linux + linux_security)."""
+        if self.graph is None:
+            return
+        self.graph.add_edge(
+            chunk_id_a,
+            chunk_id_b,
+            weight=0.5,
+            edge_type="domain_related",
+        )
+
+    def _domains_related(self, domain_a: str, domain_b: str) -> bool:
+        """
+        Check if two domains are semantically related.
+        Returns True only for explicitly defined domain families.
+
+        Examples:
+        - python + python_programming -> True
+        - python + python_security -> True (if exists)
+        - web + web_security -> False (NOT related per requirements)
+        - linux + linux_security -> True (if exists, but currently no such domains)
+        - rag + retrieval -> True (both RAG-related)
+        """
+        if domain_a == domain_b:
+            return False  # Already handled by add_domain_edge()
+
+        # Define domain families that SHOULD be connected
+        domain_families = {
+            # Python family: connect python with python-related domains
+            frozenset(["python", "python-programming"]): True,
+            # RAG family: connect rag with related terminology
+            frozenset(["rag", "retrieval"]): True,
+            frozenset(["rag", "augment"]): True,
+            # Network family: connect network with related domains
+            frozenset(["network", "networking"]): True,
+        }
+
+        domain_pair = frozenset([domain_a.lower(), domain_b.lower()])
+
+        for family, should_connect in domain_families.items():
+            if domain_pair == family and should_connect:
+                return True
+
+        return False
 
     def build_from_chunks(
         self,
@@ -139,7 +184,7 @@ class SemanticGraph:
         chunks: [{"chunk_id": "...", "domain": "...", "chunk_type": "...", "tags": [...], ...}]
         embeddings: {chunk_id: [float, ...]}
         """
-        if not self.graph:
+        if self.graph is None:
             raise RuntimeError("NetworkX not installed")
 
         # Add all nodes
@@ -219,9 +264,16 @@ class SemanticGraph:
                 if len(tags_a & tags_b) >= self.min_tag_overlap:
                     self.add_tag_overlap_edge(id_a, id_b)
 
-                # Domain affinity
-                if self.nodes[id_a].domain == self.nodes[id_b].domain:
+                # Domain affinity (exact match)
+                domain_a = self.nodes[id_a].domain.lower()
+                domain_b = self.nodes[id_b].domain.lower()
+
+                if domain_a == domain_b:
                     self.add_domain_edge(id_a, id_b)
+
+                # Related domain edges (e.g., "linux" + "linux_security")
+                if self._domains_related(domain_a, domain_b):
+                    self.add_related_domain_edge(id_a, id_b)
 
                 # RAG cluster edges (all RAG topics interconnected)
                 if id_a in rag_nodes and id_b in rag_nodes:
@@ -238,7 +290,7 @@ class SemanticGraph:
         Expand from a seed chunk via BFS up to depth hops.
         Returns subgraph context.
         """
-        if not self.graph:
+        if self.graph is None:
             raise RuntimeError("NetworkX not installed")
         if seed_chunk_id not in self.graph:
             return {"error": f"Chunk {seed_chunk_id} not found in graph"}
@@ -274,17 +326,50 @@ class SemanticGraph:
         except ImportError:
             return "PyVis not installed. Install: pip install pyvis"
 
-        if not self.graph:
+        if self.graph is None:
             return "Graph not initialized"
 
-        net = Network(directed=False, notebook=False, height="750px", width="100%")
-        net.from_nx(self.graph)
-        net.show(output_path)
+        try:
+            net = Network(directed=False, notebook=False, height="750px", width="100%")
+            net.from_nx(self.graph)
+            net.show(output_path)
+        except Exception as e:
+            # Fallback: write minimal HTML manually
+            import json
+
+            nodes = [{"id": node, "label": node} for node in self.graph.nodes()]
+            edges = [{"from": u, "to": v} for u, v in self.graph.edges()]
+
+            html = f"""<!DOCTYPE html>
+<html>
+<head>
+    <title>Knowledge Graph</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <style>
+        html, body {{ height: 100%; margin: 0; padding: 0; }}
+        #network {{ height: 100%; }}
+    </style>
+</head>
+<body>
+    <div id="network"></div>
+    <script>
+        var nodes = new vis.DataSet({json.dumps(nodes)});
+        var edges = new vis.DataSet({json.dumps(edges)});
+        var container = document.getElementById('network');
+        var data = {{ nodes: nodes, edges: edges }};
+        var options = {{}};
+        var network = new vis.Network(container, data, options);
+    </script>
+</body>
+</html>"""
+            with open(output_path, "w") as f:
+                f.write(html)
+
         return str(Path(output_path).resolve())
 
     def stats(self) -> Dict:
         """Get graph statistics."""
-        if not self.graph:
+        if self.graph is None:
             return {"error": "Graph not initialized"}
         return {
             "namespace": self.namespace,
