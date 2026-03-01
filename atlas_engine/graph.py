@@ -37,13 +37,19 @@ class GraphNode:
         tags: List[str],
         embedding: Optional[List[float]] = None,
         content_preview: str = "",
+        machine: Optional[str] = None,
+        htb: bool = False,
+        vuln_types: Optional[List[str]] = None,
     ):
         self.chunk_id = chunk_id
         self.domain = domain
         self.chunk_type = chunk_type
         self.tags = tags
         self.embedding = embedding
-        self.content_preview = content_preview[:100]  # Truncate for preview
+        self.content_preview = content_preview[:100]
+        self.machine = machine
+        self.htb = htb
+        self.vuln_types = vuln_types or []
 
 
 class SemanticGraph:
@@ -82,6 +88,9 @@ class SemanticGraph:
             chunk_type=node.chunk_type,
             tags=node.tags,
             preview=node.content_preview,
+            machine=node.machine,
+            htb=node.htb,
+            vuln_types=node.vuln_types,
         )
 
     def add_semantic_edge(
@@ -126,6 +135,7 @@ class SemanticGraph:
     ) -> None:
         """
         Build graph from list of chunk dicts.
+        Supports both old (domain/chunk_type) and new (HTB) metadata.
         chunks: [{"chunk_id": "...", "domain": "...", "chunk_type": "...", "tags": [...], ...}]
         embeddings: {chunk_id: [float, ...]}
         """
@@ -138,6 +148,23 @@ class SemanticGraph:
             if not chunk_id:
                 continue
             emb = embeddings.get(chunk_id) if embeddings else None
+
+            # Extract vulnerability types from HTB metadata
+            vuln_types = []
+            for vuln in [
+                "sqli",
+                "xss",
+                "lfi",
+                "rce",
+                "idor",
+                "csrf",
+                "ssrf",
+                "ssti",
+                "xxe",
+            ]:
+                if chunk.get(vuln, {}).get("present"):
+                    vuln_types.append(vuln)
+
             node = GraphNode(
                 chunk_id=chunk_id,
                 domain=chunk.get("domain", "unknown"),
@@ -145,6 +172,9 @@ class SemanticGraph:
                 tags=chunk.get("tags", []),
                 embedding=emb,
                 content_preview=chunk.get("content", "")[:100],
+                machine=chunk.get("machine", None),
+                htb=chunk.get("htb", False),
+                vuln_types=vuln_types,
             )
             self.add_node(node)
 
