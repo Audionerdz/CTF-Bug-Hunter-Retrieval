@@ -196,16 +196,22 @@ Get your bot token from [@BotFather](https://t.me/BotFather) on Telegram. Get yo
 
 ## Quick Activation (After Adding Keys to .env)
 
-Once you have your `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `.env/telegram.env`:
+Once you have your `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `.env/telegram.env`, set up aliases:
 
-**Start the bot daemon:**
 ```bash
-python3 src/telegram_bot.py
+bash setup_aliases.sh
 ```
 
-The bot will start polling for messages. Send `/start` to your bot on Telegram to activate.
+Then start the bot:
 
-**Or send a one-shot message:**
 ```bash
-python3 src/rag_to_telegram.py "your query"
+atlas-bot
+```
+
+The bot will start polling. Send `/start` to your bot on Telegram to activate.
+
+**Or send a one-shot message/query:**
+```bash
+atlas-stt "your query"
+atlas-send "message text"
 ```
