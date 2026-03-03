@@ -30,7 +30,7 @@ domain: web          # Web application security
 domain: linux        # Operating system concepts
 domain: python       # Programming language
 domain: rag          # Meta-knowledge about RAG itself
-domain: langchain   # LangChain notes.
+domain: langchain    # LangChain notes.
 ```
 
 Valid values: `web`, `linux`, `windows`, `langchain`, `python`, `javascript`, `infrastructure`, `cryptography`, `network`, `rag`
