@@ -30,9 +30,10 @@ domain: web          # Web application security
 domain: linux        # Operating system concepts
 domain: python       # Programming language
 domain: rag          # Meta-knowledge about RAG itself
+domanin: langchain   # LangChain notes.
 ```
 
-Valid values: `web`, `linux`, `windows`, `python`, `javascript`, `infrastructure`, `cryptography`, `network`, `rag`
+Valid values: `web`, `linux`, `windows`, `langchain`, `python`, `javascript`, `infrastructure`, `cryptography`, `network`, `rag`
 
 ### 3. chunk_type (String)
 
